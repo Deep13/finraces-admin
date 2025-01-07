@@ -46,7 +46,8 @@ interface Leaderboard {
 }
 
 const handleNavigate=(id:any)=>{
-  window.open(`https://finraces-app.netlify.app/userprofile/${id}`)
+  const URL=process.env.FINRACES_URL;
+  window.open(`${URL}/userprofile/${id}`)
 }
 
 

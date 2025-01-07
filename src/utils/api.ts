@@ -1,4 +1,5 @@
 import axios from "axios"
+const API_URL=process.env.API_URL;
 
 export const Login = async (
     email:any,
@@ -15,7 +16,7 @@ export const Login = async (
     try {
       console.log('login payload', payload);
   
-      const response = await axios.post('https://www.missionatal.com/api/v1/auth/email/login', payload);
+      const response = await axios.post(`${API_URL}/auth/email/login`, payload);
       if(response.data.user.role.id!=1){
         throw new Error("User does not have an admin access")
       }
@@ -50,7 +51,7 @@ export const getUserDetails = async (onSuccess:any, onError:any) => {
       }
   
       // Make the GET request with the authorization header
-      const response = await fetch('https://www.missionatal.com/api/v1/auth/me', {
+      const response = await fetch(`${API_URL}/auth/me`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,7 +88,7 @@ export const getUserDetails = async (onSuccess:any, onError:any) => {
 // }
 export const getRaceDataByMonths = async (onSuccess:any, onError:any, months?:number) => {
   let token = localStorage.getItem('token');
-  let URL = `https://www.missionatal.com/api/v1/races/month-count-summary?months=${months}`;
+  let URL = `${API_URL}/races/month-count-summary?months=${months}`;
 
   try {
     const response = await fetch(URL, {
@@ -152,7 +153,7 @@ export const getRaceList = async (
   
     let token = localStorage.getItem('token')
     try {
-      let URL="https://www.missionatal.com/api/v1/races/detailed?limit=30&"
+      let URL=`${API_URL}/races/detailed?limit=30&`
       if(status){
         URL+=`statuses=${status}&`
       }
@@ -208,7 +209,7 @@ export const getRaceList = async (
   
       let token = localStorage.getItem('token');
       // Make the API call
-      const response = await fetch("https://www.missionatal.com/api/v1/race-users/race-simulation", {
+      const response = await fetch(`${API_URL}/race-users/race-simulation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +233,7 @@ export const getRaceList = async (
     let token = localStorage.getItem("token"); // Retrieve the token from localStorage
     
     try {
-      let URL = `https://www.missionatal.com/api/v1/races/${id}`;  
+      let URL = `${API_URL}/races/${id}`;  
       const response = await fetch(URL, {
         method: "DELETE",
         headers: {
@@ -255,7 +256,7 @@ export const editRace= async (onSuccess:any,onError:any,id:string,status:string)
   let token = localStorage.getItem("token"); // Retrieve the token from localStorage
 
   try {
-    let URL = `https://www.missionatal.com/api/v1/races/${id}`;  
+    let URL = `${API_URL}/races/${id}`;  
     const response = await fetch(URL, {
       method: "PATCH",
       headers: {
@@ -308,7 +309,7 @@ export const getUsers = async (onSuccess: any, onError: any, page?:any,filter?:a
   else if(filter=="Suspended Users"){
     query={"status": "3"}
   }
-  let URL=`https://www.missionatal.com/api/v1/users?limit=30&`
+  let URL=`${API_URL}/users?limit=30&`
   if(page){
     URL+=`page=${page}&`
   }
@@ -349,7 +350,7 @@ export const getUserJoined = async (onSuccess: any, onError: any) => {
     return;
   }
  
-  let URL='https://www.missionatal.com/api/v1/users/predefined-count-summary'
+  let URL=`${API_URL}/users/predefined-count-summary`
   
   try {
     
@@ -381,7 +382,7 @@ export const getTotalRacesCount = async (onSuccess: any, onError: any, status?:a
   const token = localStorage.getItem('token');
 
   try {
-    let URL="https://www.missionatal.com/api/v1/races/count?"
+    let URL=`${API_URL}/races/count?`
     if(status){
         URL+=`statuses=${status}&`
       }
@@ -429,7 +430,7 @@ export const getTotalUsersCount = async (onSuccess: any, onError: any, status?:a
   const token = localStorage.getItem('token');
 
   try {
-    let URL="https://www.missionatal.com/api/v1/users/count?"
+    let URL=`${API_URL}/users/count?`
     if(status){
         URL+=`statuses=${status}&`
       }
@@ -482,7 +483,7 @@ export const suspendUser = async (onSuccess:any, onError:any, id:any, status:any
       throw new Error('No token found in localStorage');
     }
 
-    const url = `https://www.missionatal.com/api/v1/users/${id}`;
+    const url = `${API_URL}/users/${id}`;
     const body = JSON.stringify({
       "status": {
         "id": status
@@ -521,7 +522,7 @@ export const createNewAdmin = async (onSuccess: any, onError: any, payload: any)
   }
 
   try {
-    const response = await fetch(`https://www.missionatal.com/api/v1/users`, {
+    const response = await fetch(`${API_URL}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -549,7 +550,7 @@ export const createNewAdmin = async (onSuccess: any, onError: any, payload: any)
 export const searchRaces = async (onSuccess:any,onError:any,query:string)=>{
   try {
     const response = await fetch(
-      `https://www.missionatal.com/api/v1/public/search/races?nameContains=${query}`
+      `${API_URL}/public/search/races?nameContains=${query}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch search results");
@@ -567,7 +568,7 @@ export const searchRaces = async (onSuccess:any,onError:any,query:string)=>{
 export const searchUsers = async (onSuccess:any,onError:any,query:string)=>{
   try {
     const response = await fetch(
-      `https://www.missionatal.com/api/v1/public/search/users?nameContains=${query}`
+      `${API_URL}/public/search/users?nameContains=${query}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch search results");
@@ -586,7 +587,7 @@ export const searchUsers = async (onSuccess:any,onError:any,query:string)=>{
 export const getTickets = async (onSuccess:any,onError:any,titleContains?:any,page?:any,filter?:any)=>{
   let token = localStorage.getItem('token')
     try {
-      let URL="https://www.missionatal.com/api/v1/issues?";
+      let URL=`${API_URL}/issues?`;
       if(titleContains){
         URL+=`titleContains=${titleContains}&`
       }
@@ -631,7 +632,7 @@ catch(error:any){
 export const getTicketCount = async (onSuccess:any, onError:any,status?:any)=>{
   let token=localStorage.getItem("token")
   try {
-    let URL="https://www.missionatal.com/api/v1/issues/count?"
+    let URL=`${API_URL}/issues/count?`
     if(status){
         URL+=`status=${status}&`
       }
@@ -688,7 +689,7 @@ export const createTicket = async (
   let token = localStorage.getItem("token"); // Retrieve the token from localStorage
 
   try {
-    let URL = "https://www.missionatal.com/api/v1/issues";
+    let URL = `${API_URL}/issues`;
 
     // Construct the request payload
     const payload = {
@@ -725,7 +726,7 @@ export const editTicket = async (onSuccess:any,onError:any,id:string,payload:any
   let token = localStorage.getItem("token"); // Retrieve the token from localStorage
 
   try {
-    let URL = `https://www.missionatal.com/api/v1/issues/${id}`;  
+    let URL = `${API_URL}/issues/${id}`;  
     const response = await fetch(URL, {
       method: "PATCH",
       headers: {
@@ -749,7 +750,7 @@ export const deleteTicket = async(onSuccess:any, onError:any,id:string)=>{
   let token = localStorage.getItem("token"); // Retrieve the token from localStorage
 
   try {
-    let URL = `https://www.missionatal.com/api/v1/issues/${id}`;  
+    let URL = `${API_URL}/issues/${id}`;  
     const response = await fetch(URL, {
       method: "DELETE",
       headers: {
@@ -771,7 +772,7 @@ export const getTicketDetails = async(onSuccess:any,onError:any,id:any)=>{
   let token=localStorage.getItem('token');
 
   try {
-    let URL = `https://www.missionatal.com/api/v1/issues/${id}`;  
+    let URL = `${API_URL}/issues/${id}`;  
     const response = await fetch(URL, {
       method: "GET",
       headers: {
@@ -793,7 +794,7 @@ export const getTicketComments = async (onSuccess: any, onError: any, id: any) =
   let token = localStorage.getItem("token");
 
   try {
-    let URL = `https://www.missionatal.com/api/v1/issue-comments?issue_id=${id}`;
+    let URL = `${API_URL}/issue-comments?issue_id=${id}`;
     const response = await fetch(URL, {
       method: "GET",
       headers: {
@@ -834,7 +835,7 @@ export const postTicketComments = async (onSuccess: any, onError: any, id: any, 
 
 
   try {
-    const URL = "https://www.missionatal.com/api/v1/issue-comments";
+    const URL = `${API_URL}/issue-comments`;
 
     const response = await fetch(URL, {
       method: 'POST',
@@ -868,7 +869,7 @@ export const getLeaderboard = async (onSuccess:any,onError:any,page?:any)=>{
     onError("Token is missing or invalid.");
     return;
   }
-  let URL=`https://www.missionatal.com/api/v1/race-results/stats?limit=30&`;
+  let URL=`${API_URL}/race-results/stats?limit=30&`;
 
   if(page){
     URL+=`page=${page}&`

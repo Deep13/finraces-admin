@@ -276,7 +276,8 @@ function InvoiceList() {
   };
 
   const handleNavigate=(invoice:any)=>{
-    window.open(`https://finraces-app.netlify.app/race/${invoice.id}`)
+    const URL=process.env.FINRACES_URL
+    window.open(`${URL}/race/${invoice.id}`)
     // navigate(`https://finraces-app.netlify.app/race/${invoice.id}`)
   }
 
