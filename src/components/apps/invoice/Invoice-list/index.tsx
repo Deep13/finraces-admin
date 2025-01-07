@@ -14,6 +14,7 @@ import {
 import SimpleBar from "simplebar-react";
 
 import { Icon } from "@iconify/react";
+import {FINRACES_URL} from "src/config.js"
 
 import { Link, useNavigate } from "react-router";
 import { InvoiceContext } from "src/context/InvoiceContext";
@@ -276,7 +277,8 @@ function InvoiceList() {
   };
 
   const handleNavigate=(invoice:any)=>{
-    const URL=process.env.FINRACES_URL
+    // const URL=process.env.REACT_APP_FINRACES_URL
+    const URL=FINRACES_URL
     window.open(`${URL}/race/${invoice.id}`)
     // navigate(`https://finraces-app.netlify.app/race/${invoice.id}`)
   }

@@ -1,4 +1,4 @@
-
+import {FINRACES_URL} from 'src/config.js'
 import { Badge, Dropdown, Table,TextInput, Spinner } from "flowbite-react";
 
 import * as basicTable2 from "../../tables/tableData.ts";
@@ -46,7 +46,7 @@ interface Leaderboard {
 }
 
 const handleNavigate=(id:any)=>{
-  const URL=process.env.FINRACES_URL;
+  const URL=FINRACES_URL;
   window.open(`${URL}/userprofile/${id}`)
 }
 
