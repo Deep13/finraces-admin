@@ -1,2 +1,2 @@
-export const API_URL='https://www.missionatal.com/api/v1'
-export const FINRACES_URL='https://finraces-app.netlify.app'
+export const API_URL='https://wikifandom.org/api/v1'
+export const FINRACES_URL='https://finraces-qa.netlify.app'
