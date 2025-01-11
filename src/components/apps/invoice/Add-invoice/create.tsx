@@ -196,6 +196,7 @@ function CreateInvoice() {
                 type="number"
                 className="form-control"
                 max={10}
+                min={0}
               />
             </div>
 
@@ -211,6 +212,7 @@ function CreateInvoice() {
                 type="number"
                 className="form-control"
                 max={5}
+                min={0}
               />
               
             </div>

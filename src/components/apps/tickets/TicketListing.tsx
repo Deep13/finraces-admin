@@ -157,8 +157,10 @@ const TicketListing = ({ setNeedRefresh, needRefresh,filter }: TicketListingProp
   };
 
   const handleChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchParam(e.target.value);
-    console.log(e.target.value)
+    if(e.target.value.length>=3 || e.target.value.length==0){
+      setSearchParam(e.target.value);
+      console.log(e.target.value)
+    }
   }
 
     const nextPage=()=>{
@@ -225,6 +227,7 @@ const TicketListing = ({ setNeedRefresh, needRefresh,filter }: TicketListingProp
             className="form-control sm:max-w-60 max-w-full w-full"
             onChange={handleChange}
             placeholder="Search"
+            // value={searchParam}
             icon={() => <Icon icon="solar:magnifer-line-duotone" height={18} />}
           />
         </div>

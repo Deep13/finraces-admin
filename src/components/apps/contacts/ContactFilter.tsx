@@ -62,6 +62,12 @@ const ContactFilter = ({ filters, setFilters,setPage }: ContactFilterProps) => {
       sort: "admin",
       icon: 'tabler:user-off',
     },
+    {
+      id: 7,
+      name: "Bot Users",
+      sort: "admin",
+      icon: 'mage:robot',
+    },
     // {
     //   id: 6,
     //   devider: true,

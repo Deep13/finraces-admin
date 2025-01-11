@@ -16,8 +16,10 @@ type Props = {
 const ContactSearch = ({ onClick,setSearchParam,searchParam }: Props) => {
   const { searchTerm, updateSearchTerm } = useContext(ContactContext);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateSearchTerm(e.target.value);
-    setSearchParam(e.target.value);
+    if(e.target.value.length>=3 || e.target.value.length==0 ){
+      updateSearchTerm(e.target.value);
+      setSearchParam(e.target.value);
+    }
   };
 
   return (
@@ -32,7 +34,7 @@ const ContactSearch = ({ onClick,setSearchParam,searchParam }: Props) => {
         </Button>
         <TextInput
           id="search"
-          value={searchParam}
+          // value={searchParam}
           placeholder="Search User"
           className="form-control w-full"
           sizing="md"

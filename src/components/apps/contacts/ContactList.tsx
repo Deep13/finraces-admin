@@ -81,6 +81,7 @@ function ContactList({ openContact,filter,searchParam,needRefresh,setPage,page}:
   },[searchParam])
 
       console.log("fetched contact list",contacts)
+  
   const handleNext=()=>{
     setPage(page+1);
     getUsers((data:any)=>{
@@ -223,7 +224,7 @@ function ContactList({ openContact,filter,searchParam,needRefresh,setPage,page}:
                     width={40}
                     height={40}
                     alt="name"
-                    className="rounded-full"
+                    className="rounded-full h-10 w-10"
                   />
                   <div>
                     <h6 className="text-sm group-hover:text-primary">

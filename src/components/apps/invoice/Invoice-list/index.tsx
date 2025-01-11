@@ -193,8 +193,9 @@ function InvoiceList() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
+
     // setSearchTerm(query);
-    if (query.trim() !== "") {
+    if (query.trim() !== "" && e.target.value.length>=3) {
       searchRaces(
         (data:any) =>{ 
           setInvoices(data);

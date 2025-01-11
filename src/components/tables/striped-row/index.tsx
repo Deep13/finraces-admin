@@ -1,5 +1,5 @@
 import {FINRACES_URL} from 'src/config.js'
-import { Badge, Dropdown, Table,TextInput, Spinner } from "flowbite-react";
+import { Badge, Dropdown, Table,TextInput, Spinner,Button } from "flowbite-react";
 
 import * as basicTable2 from "../../tables/tableData.ts";
 import { IconDotsVertical } from "@tabler/icons-react";
@@ -8,6 +8,7 @@ import TitleCard from "src/components/shared/TitleBorderCard.tsx";
 import { useEffect, useState } from "react";
 import { getLeaderboard } from "src/utils/api.ts";
 import defaultImg from "src/assets/default.jpg"
+
 
 
 interface Photo {
@@ -71,18 +72,50 @@ const index = () => {
 
   const [isLoading,setIsLoading]=useState(false);
   const [leaderboard,setLeaderboard]=useState<Leaderboard | null>(null);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [page,setPage]=useState(1);
   useEffect(()=>{
     setIsLoading(true);
     getLeaderboard(
-      (data:any)=>{setLeaderboard(data);setIsLoading(false)},
+      (data:any)=>{
+        setLeaderboard(data);
+        // console.log("leaderboard",data)
+        setIsLoading(false);
+        setHasNextPage(data.data.hasNextPage)
+      },
       ()=>{})
   },[])
+
+  const handleNext=()=>{
+    setPage(page+1);
+    setIsLoading(true);
+    getLeaderboard(
+      (data:any)=>{
+        setLeaderboard(data);
+        setIsLoading(false);
+        setHasNextPage(data.data.hasNextPage)
+      },
+      ()=>{},
+      page)
+  }
+  const handlePrev=()=>{
+    setPage(page-1);
+    setIsLoading(true);
+    getLeaderboard(
+      (data:any)=>{
+        setLeaderboard(data);
+        setIsLoading(false);
+        setHasNextPage(data.data.hasNextPage)
+      },
+      ()=>{},
+      page)
+  }
   return (
     <>
     {isLoading?(<div className="flex justify-center items-center h-64">
       <Spinner size="xl"/>
     </div>):
-      (<TitleCard title="Leaderboard">
+      (<><TitleCard title="Leaderboard">
       <div className="sm:flex justify-between my-6">
         {/* <div>
           <TextInput
@@ -184,7 +217,27 @@ const index = () => {
             </Table>
           </div>
         </div>
-      </TitleCard>)}
+      </TitleCard>
+      <div className="flex justify-between px-6 py-3">
+        <Button
+          color="primary"
+          disabled={page === 1}
+          onClick={handlePrev}
+        >
+          Prev
+        </Button>
+        <span className="text-sm">
+          {/* Page {currentPage} of {totalPages} */}
+        </span>
+        <Button
+          color="primary"
+          disabled={!hasNextPage}
+          onClick={handleNext}
+        >
+          Next
+        </Button>
+      </div>
+      </>)}
     </>
   );
 };

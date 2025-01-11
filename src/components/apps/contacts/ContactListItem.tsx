@@ -15,7 +15,7 @@ import { ContactContext } from "src/context/Conatactcontext";
 import { ContactType } from "src/types/apps/contact";
 import { CustomizerContext } from "src/context/CustomizerContext";
 import emailSv from "/src/assets/images/backgrounds/emailSv.png";
-import { suspendUser } from "src/utils/api";
+import { suspendUser, updateBotUser } from "src/utils/api";
 import defaultUser from "src/assets/default.jpg"
 
 interface ContactListItemProps {
@@ -43,8 +43,10 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
   const [showAlert, setShowAlert] = useState(false);
   const { activeDir } = useContext(CustomizerContext);
   const [openDeleteDialog,setOpenDeleteDialog]=useState(false);
+  const [openBotDialog,setOpenBotDialog]=useState(false);
   const [suspendId,setSuspendId]=useState(0);
   const [userStatus,setUserStatus]=useState(0);
+  const [botStatus,setBotStatus]=useState(false);
 
   useEffect(() => {
     setFormData(selectedContact);
@@ -75,6 +77,29 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
     setUserStatus(status);
     setSuspendId(id);
   }
+
+  const botStatusConfirmation=(flag:boolean)=>{
+    setOpenBotDialog(true);
+    setBotStatus(flag);
+  }
+  const handleBotStatus=(flag:boolean)=>{
+    updateBotUser(
+      ()=>{
+        setNeedRefresh(!needRefresh);
+        setSelectedContact(null);
+        setOpenBotDialog(false);
+        console.log("bot created")
+      },
+      (error:any)=>{
+        console.log(error)
+      },
+      selectedContact.id,
+      flag)
+  }
+  const handleCloseBotDialog = () => {
+    setOpenBotDialog(false);
+  };
+
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
@@ -125,6 +150,7 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
     );
   }
 
+  // console.log("Selected Contact",selectedContact)
   return (
     <>
       <Drawer
@@ -182,18 +208,30 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
                     </div>
                     
                     
-                    <div className="col-span-12">
+                    <div className="col-span-6">
                       <p className="text-darklink dark:text-bodytext text-sm">
                         Is Guest User?
                       </p>
                       <h5 className="font-semibold mb-0.5">
-                        {selectedContact.is_guest.toString()}
+                        {selectedContact.is_guest?(
+                          <span>True</span>
+                        ):(<span>False</span>)}
+                      </h5>
+                    </div>
+                    <div className="col-span-6">
+                      <p className="text-darklink dark:text-bodytext text-sm">
+                        Is Bot User?
+                      </p>
+                      <h5 className="font-semibold mb-0.5">
+                        {selectedContact.isBot?(
+                          <span>True</span>
+                        ):(<span>False</span>)}
                       </h5>
                     </div>
                   </div>
                 </div>
                 <HR className="my-2" />
-                <div className="py-4 px-5 gap-2 flex">
+                <div className="py-4 px-10 gap-2 flex justify-between">
                 {selectedContact.status.id==3?
                 <Button
                     color={"lightsuccess"}
@@ -211,7 +249,25 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
                     Suspend
                   </Button>
                   }
+                  {selectedContact.isBot?
+                <Button
+                    color={"lightsuccess"}
+                    onClick={() => botStatusConfirmation(false)}
+                    className="rounded-xl"
+                  >
+                    Remove Bot
+                  </Button>
+                  :
+                  <Button
+                    color={"lightsecondary"}
+                    onClick={() => botStatusConfirmation(true)}
+                    className="rounded-xl"
+                  >
+                    Assign as a Bot
+                  </Button>
+                  }
                 </div>
+                
               </div>
             </div>
           </SimpleBar>
@@ -235,12 +291,20 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
       )}
       <Modal show={openDeleteDialog} onClose={handleCloseDeleteDialog} size={"md"}>
         <Modal.Body>
-          <p className="text-center text-lg text-ld">
+          {selectedContact.status.id==3?
+          (
+            <p className="text-center text-lg text-ld">
+            Are you sure you want to unsuspend the selected user?
+          </p>
+          ):(
+            <p className="text-center text-lg text-ld">
             Are you sure you want to suspend the selected user?
           </p>
+          )
+          }
         </Modal.Body>
         <Modal.Footer className="mx-auto">
-          <Button color="lightsecondary" onClick={handleCloseDeleteDialog}>
+          <Button color="lightwarning" onClick={handleCloseDeleteDialog}>
             Cancel
           </Button>
           {/* <Button color="error" onClick={()=>{handleDeleteClick()}}>
@@ -261,6 +325,44 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
                     className="rounded-xl"
                   >
                     Suspend
+                  </Button>
+                  }
+        </Modal.Footer>
+      </Modal>
+      <Modal show={openBotDialog} onClose={handleCloseBotDialog} size={"md"}>
+        <Modal.Body>
+          {selectedContact.isBot?
+          (<p className="text-center text-lg text-ld">
+            Are you sure you want to remove the selected user's status as a bot?
+          </p>):(
+            <p className="text-center text-lg text-ld">
+            Are you sure you want to assign the selected user as a bot?
+          </p>
+          )
+          }
+        </Modal.Body>
+        <Modal.Footer className="mx-auto">
+          <Button color="lightwarning" onClick={handleCloseBotDialog}>
+            Cancel
+          </Button>
+          {/* <Button color="error" onClick={()=>{handleDeleteClick()}}>
+            Suspend
+          </Button> */}
+          {selectedContact.isBot?
+                <Button
+                    color={"lightsuccess"}
+                    onClick={() => handleBotStatus(false)}
+                    className="rounded-xl"
+                  >
+                    Remove Bot
+                  </Button>
+                  :
+                  <Button
+                    color={"lightsecondary"}
+                    onClick={() => handleBotStatus(true)}
+                    className="rounded-xl"
+                  >
+                    Assign as a Bot
                   </Button>
                   }
         </Modal.Footer>

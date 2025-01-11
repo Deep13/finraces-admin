@@ -299,6 +299,10 @@ export const getUsers = async (onSuccess: any, onError: any, page?:any,filter?:a
     query={"isGuest": true}
     
   }
+  if(filter=="Bot Users"){
+    query={"isBot": true}
+    
+  }
   else if(filter=="Admin Users"){
     query={"roles": [{"id": 1}]}
     
@@ -513,6 +517,42 @@ export const suspendUser = async (onSuccess:any, onError:any, id:any, status:any
     onError(error);
   }
 };
+
+export const updateBotUser = async (onSuccess:any, onError:any, id:any, status:boolean)=>{
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found in localStorage');
+    }
+
+    const url = `${API_URL}/users/${id}`;
+    const body = JSON.stringify({
+      "isBot": status
+    }); // Pass `status` in the request body
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Include the token for authorization
+      },
+      body, // Include the `status` in the request payload
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('User suspended successfully:', data);
+      onSuccess(data);
+    } else {
+      const errorData = await response.json();
+      console.error('API Error:', errorData);
+      onError(errorData);
+    }
+  } catch (error) {
+    console.error('Fetch Error:', error);
+    onError(error);
+  }
+}
 
 export const createNewAdmin = async (onSuccess: any, onError: any, payload: any) => {
   const token = localStorage.getItem('token');
