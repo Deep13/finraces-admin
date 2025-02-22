@@ -1,4 +1,4 @@
-import {FINRACES_URL} from 'src/config.js'
+import {FINRACES_URL} from 'src/config.ts'
 import { Badge, Dropdown, Table,TextInput, Spinner,Button } from "flowbite-react";
 
 import * as basicTable2 from "../../tables/tableData.ts";

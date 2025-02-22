@@ -17,6 +17,7 @@ import { CustomizerContext } from "src/context/CustomizerContext";
 import emailSv from "/src/assets/images/backgrounds/emailSv.png";
 import { suspendUser, updateBotUser } from "src/utils/api";
 import defaultUser from "src/assets/default.jpg"
+import { updatePhoto,uploadProfilePicture } from "src/utils/api";
 
 interface ContactListItemProps {
   openContactValue: boolean;
@@ -47,6 +48,10 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
   const [suspendId,setSuspendId]=useState(0);
   const [userStatus,setUserStatus]=useState(0);
   const [botStatus,setBotStatus]=useState(false);
+  const [fileUploadPopUp, setFileUploadPopUp]=useState(false);
+  const [imageIsLoading,setImageIsLoading]= useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
 
   useEffect(() => {
     setFormData(selectedContact);
@@ -177,14 +182,25 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
           <HR className="my-0" />
           <SimpleBar className={`max-h-[600px] h-[calc(100vh_-_100px)]`}>
             <div className="py-5">
-              <div>
+              <div >
                 <div className="p-5">
                 <div className="flex justify-center mb-4">
+                    <div className="flex flex-col items-center justify-center gap-5">
                     <img
                       src={selectedContact.photo?selectedContact.photo.path : defaultUser} // Fallback to default avatar
                       alt={`${selectedContact.firstName} ${selectedContact.lastName}`}
                       className="w-24 h-24 rounded-full shadow-sm"
                     />
+                   {selectedContact?.isBot &&
+                    <Button
+                    color={"lightprimary"}
+                    onClick={() => setFileUploadPopUp(true)}
+                    className="rounded-xl"
+                  >
+                    Upload Profile Image
+                  </Button>
+                   }
+                    </div>
                   </div>
                   <div className="grid grid-cols-12 gap-5 mt-8">
                   <div className="col-span-12">
@@ -327,6 +343,78 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
                     Suspend
                   </Button>
                   }
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={fileUploadPopUp} onClose={handleCloseDeleteDialog} size={"md"}>
+      <Modal.Body>
+    <h3 className="text-lg font-semibold text-center mb-3">Update Profile Picture</h3>
+
+    <div className="flex flex-col items-center gap-4">
+      {/* Profile Image Preview */}
+      <div className="w-32 h-32 rounded-full overflow-hidden border border-gray-300">
+        <img 
+          src={selectedContact.photo?.path || defaultUser} 
+          alt="Profile Preview" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* File Input */}
+      <input
+        type="file"
+        accept="image/*"
+        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+        onChange={(e) => {
+          const file = e.target.files?.[0] || null;
+          if (file) {
+            // setSelectedImage(file);
+            // setImagePreview(URL.createObjectURL(file)); // Show preview
+            setSelectedImage(file)
+            console.log(file)
+          }
+        }}
+      />
+    </div>
+  </Modal.Body>
+        <Modal.Footer className="mx-auto">
+          <Button color="lightwarning" onClick={()=>setFileUploadPopUp(false)}>
+            Cancel
+          </Button>
+
+          <Button color="lightwarning" onClick={() => {
+    if (selectedImage) {
+        uploadProfilePicture(selectedImage, (data:any) => {
+            setImageIsLoading(true);
+
+            updatePhoto(
+              data.file.id,
+              selectedContact.id,
+              (updatedData: any) => {
+                const newImagePath = updatedData?.photo?.path;
+                let userData = JSON.parse(atob(localStorage.getItem("userDetails") || "{}"));
+                
+                if (userData?.photo) {
+                  userData.photo.path = newImagePath;
+                  localStorage.setItem("userDetails", JSON.stringify(userData));
+                }
+            
+                setFileUploadPopUp(false);
+                setTimeout(() => setImageIsLoading(false), 2500);
+                setSelectedContact(null)
+              },
+              (error: any) => {
+                console.error("Error updating image", error);
+              }
+            );
+            
+        },(error:any)=>{console.log("Error in Profile pic upload",error)});
+    }
+}}
+>
+            Upload Image
+          </Button>
+                    
         </Modal.Footer>
       </Modal>
       <Modal show={openBotDialog} onClose={handleCloseBotDialog} size={"md"}>

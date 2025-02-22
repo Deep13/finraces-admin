@@ -1,5 +1,5 @@
 import axios from "axios"
-import {API_URL} from "../config.js"
+import {API_URL} from "../config.ts"
 
 export const Login = async (
     email:any,
@@ -86,6 +86,109 @@ export const getUserDetails = async (onSuccess:any, onError:any) => {
 //     }
 //     console.log(response)
 // }
+
+export const updatePhoto = async (
+  photoId: any,
+  userId: any,
+  onSuccess?: (data: any) => void,
+  onError?: (error: any) => void
+) => {
+  try {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("User is not authenticated. Token is missing.");
+    }
+
+    // Define the API endpoint
+    const url = `${API_URL}/users/${userId}`;
+
+    // Create the payload
+    const payload = {
+      photo: {
+        id: photoId,
+      },
+    };
+
+    // Make the PATCH request
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // Handle non-OK responses
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Error: ${response.status} - ${errorData.message}`);
+    }
+
+    // Parse and return the response data
+    const data = await response.json();
+    console.log("Photo updated successfully:", data);
+
+    // Call onSuccess if it's defined
+    if (onSuccess) {
+      onSuccess(data);
+    }
+  } catch (error: any) {
+    console.error("Error updating photo:", error.message);
+    // Call onError if it's defined
+    if (onError) {
+      onError(error);
+    }
+  }
+};
+
+
+export const uploadProfilePicture = async (file:any, onSuccess:any, onError:any) => {
+  const UPLOAD_URL = `${API_URL}/files/upload`; // Replace with your upload endpoint
+  const token = localStorage.getItem('token')
+  let storedUserDetails = localStorage.getItem('userDetails');
+  let userDetails = storedUserDetails ? JSON.parse(atob(storedUserDetails)) : null;
+
+  // console.log(JSON.parse(atob(userDetails)))
+
+  try {
+    // Create FormData object and append file
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Make the fetch request with Authorization header
+    const response = await fetch(UPLOAD_URL, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`, // Add the Bearer token
+      },
+    });
+
+    // Check if the response is OK(status in the range 200 - 299)
+    if (!response.ok) {
+      const errorText = await response.text(); // Extract error message from server if any
+      console.error('Server error:', errorText);
+      throw new Error(`Failed to upload file: ${response.status} ${response.statusText}`);
+    }
+
+    // Parse response JSON
+    const data = await response.json();
+    console.log('File uploaded successfully:', data);
+    userDetails.profilePic = data.file
+    await console.log(userDetails)
+    await localStorage.setItem('userDetails', btoa(JSON.stringify(userDetails)))
+    onSuccess(data)
+
+  } catch (error:any) {
+    // Catch network or other unexpected errors
+    console.error('Upload failed:', error.message || error);
+    // throw new Error(`An error occurred while uploading: ${error.message}`);
+    onError(error)
+  }
+};
+
 export const getRaceDataByMonths = async (onSuccess:any, onError:any, months?:number) => {
   let token = localStorage.getItem('token');
   let URL = `${API_URL}/races/month-count-summary?months=${months}`;
@@ -206,6 +309,8 @@ export const getRaceList = async (
         start_date: startDateTime,
         end_date: endDateTime,
       };
+
+      console.log(apiBody)
   
       let token = localStorage.getItem('token');
       // Make the API call

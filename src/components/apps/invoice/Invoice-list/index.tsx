@@ -1,5 +1,6 @@
 import { getRaceList,searchRaces,getTotalRacesCount, deleteRace, editRace } from "src/utils/api";
 import  { useContext, useState, useEffect } from "react";
+import { createDummyRace } from "src/utils/api";
 import {
   Checkbox,
   Table,
@@ -14,7 +15,7 @@ import {
 import SimpleBar from "simplebar-react";
 
 import { Icon } from "@iconify/react";
-import {FINRACES_URL} from "src/config.js"
+import {FINRACES_URL} from "src/config.ts"
 
 import { Link, useNavigate } from "react-router";
 import { InvoiceContext } from "src/context/InvoiceContext";
@@ -284,6 +285,85 @@ function InvoiceList() {
     // navigate(`https://finraces-app.netlify.app/race/${invoice.id}`)
   }
 
+
+  const generateRandomStockRaceName = () => {
+    // Get user details from localStorage
+    let encodedUserDetails = localStorage.getItem('userDetails');
+    if (!encodedUserDetails) {
+      // throw new Error("User details not found in localStorage");
+      // probably be guest
+      encodedUserDetails = localStorage.getItem('guest_details')
+      if (!encodedUserDetails) {
+        throw new Error("User details not found in localStorage");
+
+      }
+    }
+
+    // Decode and parse user details
+    const decodedUserDetails = JSON.parse(atob(encodedUserDetails));
+    const userName = decodedUserDetails.userName;
+
+    if (!userName) {
+      throw new Error("Username not found in userDetails");
+    }
+
+    // Creative stock-related phrases
+    const stockPhrases = [
+      "Charge of the Bulls",
+      "Bear's Retreat",
+      "Portfolio Blitz",
+      "Trader's Triumph",
+      "Capital Crusade",
+      "Equity Escapade",
+      "Stock Surge Showdown",
+      "Investor's Arena",
+      "Exchange Frenzy",
+      "Market Mayhem"
+    ];
+
+    // Generate a random phrase
+    const randomPhrase = stockPhrases[Math.floor(Math.random() * stockPhrases.length)];
+    let today = Date.now()
+    // Generate the race name
+    return `${userName}'s ${randomPhrase} ${today}`;
+  };
+  
+  const demoRaceCreation = async () => {
+    const now = new Date(); // Get current time
+    let races = [];
+
+    for (let i = 0; i < 30; i++) {
+        const startTime = new Date(now.getTime() + i * 60 * 60 * 1000); // Increment 1 hour each time
+        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // End time is +1 hour
+
+        const raceData = {
+            id: i + 1,
+            raceName: generateRandomStockRaceName(),
+            numUsers: 5,
+            numStocks: 5,
+            startDate: startTime.toISOString().split("T")[0], // Format YYYY-MM-DD
+            endDate: endTime.toISOString().split("T")[0],
+            startTime: startTime.toTimeString().split(" ")[0], // Format HH:MM:SS
+            endTime: endTime.toTimeString().split(" ")[0],
+        };
+
+        races.push(raceData);
+    }
+
+    console.log("Generated Races:", races);
+
+    for (let race of races) {
+        createDummyRace(
+            (data:any) => console.log("Race Created:", data),
+            (error:any) => console.error("Error Creating Race:", error),
+            race
+        );
+    }
+
+    // setShowAlert(true);
+    // setTimeout(() => setShowAlert(false), 5000);
+};
+
   return (
     
     <div className="overflow-x-auto">
@@ -360,10 +440,13 @@ function InvoiceList() {
             onChange={handleChange}
           />
         </div>
-        <div className="sm:flex justify-between">
+        <div className="sm:flex justify-between gap-5">
         {/* <Button color={"error"} className="sm:w-fit w-full sm:mt-0 mt-4 mr-2">
          Delete Race
         </Button> */}
+        <Button onClick={()=>{demoRaceCreation()}} color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
+         Create Demo Races
+        </Button>
         <Button color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
           <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
         </Button>
