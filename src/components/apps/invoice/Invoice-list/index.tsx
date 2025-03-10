@@ -37,6 +37,7 @@ function InvoiceList() {
   const [upcomingRaces, setUpcomingRaces] = useState(0); // State to store total races
   const [selectedRace,setSelectedRace]=useState<any>({});
   const [change,setChange]=useState(false);
+  const [showModal,setShowModal]=useState(false);
   
   useEffect(()=>{
     
@@ -88,7 +89,7 @@ function InvoiceList() {
           );
         }, [change]);
   
-  console.log("Invoices",invoices)
+  
   // Filter invoices based on search term
   // const filteredInvoices = invoices.filter(
   //   (invoice: { name: string; created_by: any; status: string }) => {
@@ -329,11 +330,13 @@ function InvoiceList() {
   };
   
   const demoRaceCreation = async () => {
-    const now = new Date(); // Get current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 2); // Add 2 minutes delay before the first race
+
     let races = [];
 
     for (let i = 0; i < 30; i++) {
-        const startTime = new Date(now.getTime() + i * 60 * 60 * 1000); // Increment 1 hour each time
+        const startTime = new Date(now.getTime() + i * (60 * 60 * 1000 + 2 * 60 * 1000)); // Add 1 hour + 2 minutes buffer
         const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // End time is +1 hour
 
         const raceData = {
@@ -353,16 +356,22 @@ function InvoiceList() {
     console.log("Generated Races:", races);
 
     for (let race of races) {
-        createDummyRace(
-            (data:any) => console.log("Race Created:", data),
-            (error:any) => console.error("Error Creating Race:", error),
-            race
-        );
+        try {
+            await createDummyRace(
+                (data) => console.log("✅ Race Created:", data),
+                (error) => console.error("❌ Error Creating Race:", error),
+                race
+            );
+        } catch (error) {
+            console.error("❌ Error in API call:", error);
+        }
     }
 
-    // setShowAlert(true);
-    // setTimeout(() => setShowAlert(false), 5000);
+    setShowModal(false)
 };
+
+
+
 
   return (
     
@@ -444,8 +453,8 @@ function InvoiceList() {
         {/* <Button color={"error"} className="sm:w-fit w-full sm:mt-0 mt-4 mr-2">
          Delete Race
         </Button> */}
-        <Button onClick={()=>{demoRaceCreation()}} color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
-         Create Demo Races
+        <Button onClick={()=>{setShowModal(true)}} color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
+         Create 30 Demo Races
         </Button>
         <Button color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
           <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
@@ -609,6 +618,25 @@ function InvoiceList() {
           </Button>
           <Button color="lighterror" onClick={handleConfirmDelete}>
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showModal} size={"md"}>
+        <Modal.Body>
+          <p className="text-center text-lg text-ld">
+          Are you sure you want to create 30 demo races? <br/>
+          Each race will include 5 random users and 5 random stocks, running for 1 hour each, starting sequentially.
+          </p>
+        </Modal.Body>
+        <Modal.Footer className="mx-auto">
+          <Button color="lighterror" onClick={()=>{setShowModal(false)}}>
+            Cancel
+          </Button>
+          <Button color="lightsecondary" onClick={()=>{
+            demoRaceCreation()
+            }}>
+            Proceed
           </Button>
         </Modal.Footer>
       </Modal>

@@ -394,14 +394,15 @@ const ContactListItem: React.FC<ContactListItemProps> = ({
                 const newImagePath = updatedData?.photo?.path;
                 let userData = JSON.parse(atob(localStorage.getItem("userDetails") || "{}"));
                 
-                if (userData?.photo) {
-                  userData.photo.path = newImagePath;
-                  localStorage.setItem("userDetails", JSON.stringify(userData));
+                if (selectedContact?.photo) {
+                  selectedContact.photo.path = newImagePath;
+                  // localStorage.setItem("userDetails", JSON.stringify(userData));
                 }
             
                 setFileUploadPopUp(false);
                 setTimeout(() => setImageIsLoading(false), 2500);
-                setSelectedContact(null)
+                setSelectedContact(null);
+                setSelectedImage(null);
               },
               (error: any) => {
                 console.error("Error updating image", error);

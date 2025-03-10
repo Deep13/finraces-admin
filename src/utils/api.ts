@@ -176,9 +176,9 @@ export const uploadProfilePicture = async (file:any, onSuccess:any, onError:any)
     // Parse response JSON
     const data = await response.json();
     console.log('File uploaded successfully:', data);
-    userDetails.profilePic = data.file
-    await console.log(userDetails)
-    await localStorage.setItem('userDetails', btoa(JSON.stringify(userDetails)))
+    // userDetails.profilePic = data.file
+    // console.log(userDetails)
+    // localStorage.setItem('userDetails', btoa(JSON.stringify(loginUserDetails)))
     onSuccess(data)
 
   } catch (error:any) {
@@ -288,51 +288,47 @@ export const getRaceList = async (
 
   export const createDummyRace = async (onSuccess:any, onError:any, formData:any) => {
     try {
-      // Convert IST to UTC
-      // const convertToUTC = (date:any, time:any) => {
-      //   const [year, month, day] = date.split('-');
-      //   const [hours, minutes] = time.split(':');
-      //   const istDate = new Date(Date.UTC(year, month - 1, day, hours, minutes)); // Create IST date
-      //   return istDate.toISOString(); // Convert to UTC ISO string
-      // };
-      const [startYear, startMonth, startDay] = formData.startDate.split('-');
-      const [endYear, endMonth, endDay] = formData.endDate.split('-');
-      const startDateTime = new Date(`${startYear}-${startMonth}-${startDay}T${formData.startTime}`).toISOString();
-      const endDateTime = new Date(`${endYear}-${endMonth}-${endDay}T${formData.endTime}`).toISOString();
-  
-      // console.log(convertToUTC(formData.startDate, formData.startTime));
-      // Format the data to match the expected API body
-      const apiBody = {
-        name: formData.raceName,
-        numUsers: formData.numUsers,
-        numStocks: formData.numStocks,
-        start_date: startDateTime,
-        end_date: endDateTime,
-      };
+        const { startDate, startTime, endDate, endTime, raceName, numUsers, numStocks } = formData;
 
-      console.log(apiBody)
-  
-      let token = localStorage.getItem('token');
-      // Make the API call
-      const response = await fetch(`${API_URL}/race-users/race-simulation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(apiBody),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const responseData = await response.json();
-      onSuccess(responseData);
+        // Directly use `Date()` conversion like `createRaceAndJoinUser`
+        const startDateTime = new Date(`${startDate}T${startTime}`).toISOString();
+        const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
+
+        const apiBody = {
+            name: raceName,
+            numUsers,
+            numStocks,
+            start_date: startDateTime,
+            end_date: endDateTime,
+        };
+
+        console.log("📤 Sending API Request:", apiBody);
+
+        let token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/race-users/race-simulation`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(apiBody),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        console.log("✅ Race Created:", responseData);
+        onSuccess(responseData);
     } catch (error) {
-      onError(error);
+        console.error("❌ Error Creating Race:", error);
+        onError(error);
     }
-  };
+};
+
+
+
   
   export const deleteRace = async(onSuccess:any, onError:any,id:string)=>{
     let token = localStorage.getItem("token"); // Retrieve the token from localStorage
