@@ -23,15 +23,16 @@ const BoxedAuthLogin = () => {
       await Login(
         email,
         password,
-        () => {
+        (res) => {
           // alert("Login successful!");
           setIsLoggedIn(true);
-          localStorage.setItem('isLoggedIn', "true");
+          // localStorage.setItem('isLoggedIn', "true");
           setOpenDialog(false);
           navigate("/"); // Redirect to the desired route
         },
-        () => {
+        (error) => {
           //alert("Login failed. Please check your credentials.");
+          console.log(error)
           setOpenDialog(true);
         }
       );

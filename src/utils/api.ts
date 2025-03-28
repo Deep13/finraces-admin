@@ -2,44 +2,55 @@ import axios from "axios"
 import {API_URL} from "../config.ts"
 
 export const Login = async (
-    email:any,
-    password:any,
-    onSuccess = () => { },
-    onError = () => { },
-  ) => {
-  
-    const payload = {
-      email: email,
-      password: password
-    };
-  
-    try {
-      console.log('login payload', payload);
-  
-      const response = await axios.post(`${API_URL}/auth/email/login`, payload);
-      if(response.data.user.role.id!=1){
-        throw new Error("User does not have an admin access")
-      }
-      console.log('response', response.data);
-  
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
-      // localStorage.setItem('userName', response.data.user.firstName)
-      // localStorage.setItem('Photo', response.data.user.photo)
-      let loginUserDetails = {
-        userName: response.data.user.firstName,
-        userId: response.data.user.id,
-        photo: response.data.user.photo
-      }
-      localStorage.setItem('userDetails', btoa(JSON.stringify(loginUserDetails)))
-      localStorage.removeItem('guest_details')
-      onSuccess()
-  
-    } catch (error) {
-    //   console.error('Login failed:', error.response ? error.response.data : error.message);
-      onError()
+  email: string,
+  password: string,
+  onSuccess: (data: any) => void = (data) => console.log("Success:", data),
+  onError: (error: any) => void = (error) => console.error("Error:", error)
+) => {
+  const payload = { email, password };
+
+  try {
+    console.log("Login Payload:", payload);
+
+    const response = await fetch(`${API_URL}/auth/email/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Login failed with status: ${response.status}`);
     }
-  };
+
+    const data = await response.json();
+    console.log("Response:", data);
+
+    if (data.user.role.id !== 1) {
+      throw new Error("User does not have admin access");
+    }
+
+    // Save authentication details in localStorage
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("refreshToken", data.refreshToken);
+
+    const loginUserDetails = {
+      userName: data.user.firstName,
+      userId: data.user.id,
+      photo: data.user.photo,
+      role: data.user.role,
+    };
+
+    localStorage.setItem("userDetails", btoa(JSON.stringify(loginUserDetails)));
+    localStorage.removeItem("guest_details");
+
+    onSuccess(data);
+  } catch (error) {
+    console.error("Login Error:", error);
+    onError(error);
+  }
+};
 
 export const getUserDetails = async (onSuccess:any, onError:any) => {
     try {
