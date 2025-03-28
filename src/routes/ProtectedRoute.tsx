@@ -7,14 +7,15 @@ import { useNavigate } from 'react-router';
 
 const ProtectedRoute = ({element}:any) => {
     // const context =useContext(AuthContext);
-    const navigate=useNavigate();
-    const userDetails  = JSON.parse(atob(localStorage.getItem("userDetails")));
+    // const navigate=useNavigate();
+    // if(!localStorage.getItem("userDetai"))
+    // const userDetails  = JSON.parse(atob(localStorage.getItem("userDetails")));
 
-    useEffect(()=>{
-      if(!userDetails || userDetails.role.id!==1){
-        navigate('/login')
-      }
-    },[navigate,userDetails])
+    // useEffect(()=>{
+    //   if(!userDetails || userDetails.role.id!==1){
+    //     navigate('/login')
+    //   }
+    // },[navigate,userDetails])
   // if (!IsLoggedIn) {
   //   return <Navigate to="/login"  replace/>;
   // }
