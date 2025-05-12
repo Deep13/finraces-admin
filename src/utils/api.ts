@@ -1,21 +1,21 @@
-import axios from "axios"
-import {API_URL} from "../config.ts"
+import axios from 'axios';
+import { API_URL } from '../config.ts';
 
 export const Login = async (
   email: string,
   password: string,
-  onSuccess: (data: any) => void = (data) => console.log("Success:", data),
-  onError: (error: any) => void = (error) => console.error("Error:", error)
+  onSuccess: (data: any) => void = (data) => console.log('Success:', data),
+  onError: (error: any) => void = (error) => console.error('Error:', error),
 ) => {
   const payload = { email, password };
 
   try {
-    console.log("Login Payload:", payload);
+    console.log('Login Payload:', payload);
 
     const response = await fetch(`${API_URL}/auth/email/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     });
@@ -25,15 +25,15 @@ export const Login = async (
     }
 
     const data = await response.json();
-    console.log("Response:", data);
+    console.log('Response:', data);
 
     if (data.user.role.id !== 1) {
-      throw new Error("User does not have admin access");
+      throw new Error('User does not have admin access');
     }
 
     // Save authentication details in localStorage
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("refreshToken", data.refreshToken);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('refreshToken', data.refreshToken);
 
     const loginUserDetails = {
       userName: data.user.firstName,
@@ -42,50 +42,50 @@ export const Login = async (
       role: data.user.role,
     };
 
-    localStorage.setItem("userDetails", btoa(JSON.stringify(loginUserDetails)));
-    localStorage.removeItem("guest_details");
+    localStorage.setItem('userDetails', btoa(JSON.stringify(loginUserDetails)));
+    localStorage.removeItem('guest_details');
 
     onSuccess(data);
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error('Login Error:', error);
     onError(error);
   }
 };
 
-export const getUserDetails = async (onSuccess:any, onError:any) => {
-    try {
-      // Retrieve the token from localStorage
-      const token = localStorage.getItem('token');
-  
-      if (!token) {
-        throw new Error('No token found in localStorage');
-      }
-  
-      // Make the GET request with the authorization header
-      const response = await fetch(`${API_URL}/auth/me`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json', // Optional, adjust if needed
-        },
-      });
-  
-      // Check if the response is OK
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
-      }
-  
-      // Parse and return the JSON data
-      const data = await response.json();
-      console.log("user", data)
-      onSuccess(data)
-    } catch (error:any) {
-      // Handle and log errors
-      console.error('Error fetching data:', error.message);
-      // throw error; // Re-throw to allow further handling if needed
-      onError(error)
+export const getUserDetails = async (onSuccess: any, onError: any) => {
+  try {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('No token found in localStorage');
     }
-  };
+
+    // Make the GET request with the authorization header
+    const response = await fetch(`${API_URL}/auth/me`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json', // Optional, adjust if needed
+      },
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+    }
+
+    // Parse and return the JSON data
+    const data = await response.json();
+    console.log('user', data);
+    onSuccess(data);
+  } catch (error: any) {
+    // Handle and log errors
+    console.error('Error fetching data:', error.message);
+    // throw error; // Re-throw to allow further handling if needed
+    onError(error);
+  }
+};
 
 // export const getTotalRaces= async (onSuccess:any, onError:any) => {
 //     const response = await fetch('https://www.missionatal.com/api/race/count', {
@@ -102,13 +102,13 @@ export const updatePhoto = async (
   photoId: any,
   userId: any,
   onSuccess?: (data: any) => void,
-  onError?: (error: any) => void
+  onError?: (error: any) => void,
 ) => {
   try {
     // Retrieve the token from localStorage
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      throw new Error("User is not authenticated. Token is missing.");
+      throw new Error('User is not authenticated. Token is missing.');
     }
 
     // Define the API endpoint
@@ -123,9 +123,9 @@ export const updatePhoto = async (
 
     // Make the PATCH request
     const response = await fetch(url, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
@@ -139,14 +139,14 @@ export const updatePhoto = async (
 
     // Parse and return the response data
     const data = await response.json();
-    console.log("Photo updated successfully:", data);
+    console.log('Photo updated successfully:', data);
 
     // Call onSuccess if it's defined
     if (onSuccess) {
       onSuccess(data);
     }
   } catch (error: any) {
-    console.error("Error updating photo:", error.message);
+    console.error('Error updating photo:', error.message);
     // Call onError if it's defined
     if (onError) {
       onError(error);
@@ -154,10 +154,9 @@ export const updatePhoto = async (
   }
 };
 
-
-export const uploadProfilePicture = async (file:any, onSuccess:any, onError:any) => {
+export const uploadProfilePicture = async (file: any, onSuccess: any, onError: any) => {
   const UPLOAD_URL = `${API_URL}/files/upload`; // Replace with your upload endpoint
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   let storedUserDetails = localStorage.getItem('userDetails');
   let userDetails = storedUserDetails ? JSON.parse(atob(storedUserDetails)) : null;
 
@@ -190,29 +189,28 @@ export const uploadProfilePicture = async (file:any, onSuccess:any, onError:any)
     // userDetails.profilePic = data.file
     // console.log(userDetails)
     // localStorage.setItem('userDetails', btoa(JSON.stringify(loginUserDetails)))
-    onSuccess(data)
-
-  } catch (error:any) {
+    onSuccess(data);
+  } catch (error: any) {
     // Catch network or other unexpected errors
     console.error('Upload failed:', error.message || error);
     // throw new Error(`An error occurred while uploading: ${error.message}`);
-    onError(error)
+    onError(error);
   }
 };
 
-export const getRaceDataByMonths = async (onSuccess:any, onError:any, months?:number) => {
+export const getRaceDataByMonths = async (onSuccess: any, onError: any, months?: number) => {
   let token = localStorage.getItem('token');
   let URL = `${API_URL}/races/month-count-summary?months=${months}`;
 
   try {
     const response = await fetch(URL, {
-      method: "GET",
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -222,26 +220,36 @@ export const getRaceDataByMonths = async (onSuccess:any, onError:any, months?:nu
 
     // Define the month order
     const monthOrder = [
-      "January", "February", "March", "April", "May", "June", 
-      "July", "August", "September", "October", "November", "December"
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     // Sort the object based on year and month
     const sortedResponseData = Object.entries(responseData)
       .sort((a, b) => {
-        const [monthA, yearA] = a[0].split(" "); // Month and Year from the key
-        const [monthB, yearB] = b[0].split(" "); // Month and Year from the key
-        
+        const [monthA, yearA] = a[0].split(' '); // Month and Year from the key
+        const [monthB, yearB] = b[0].split(' '); // Month and Year from the key
+
         const yearCompare = yearA === yearB ? 0 : yearA < yearB ? -1 : 1;
-        
+
         if (yearCompare === 0) {
           // If the years are the same, sort by month
           return monthOrder.indexOf(monthA) - monthOrder.indexOf(monthB);
         }
-        
+
         return yearCompare; // Sort by year first
       })
-      .reduce((acc:any, [month, value]) => {
+      .reduce((acc: any, [month, value]) => {
         acc[month] = value; // Rebuild the object
         return acc;
       }, {});
@@ -250,143 +258,130 @@ export const getRaceDataByMonths = async (onSuccess:any, onError:any, months?:nu
 
     // Pass the sorted data to onSuccess
     onSuccess(sortedResponseData);
-
   } catch (error) {
     onError(error);
   }
 };
 
-
 export const getRaceList = async (
-    
-    onSuccess = (data:any) => { },
-    onError = (data:any) => { },
-    status?:string,
-    page?:any
-  ) => {
-  
-    let token = localStorage.getItem('token')
-    try {
-      let URL=`${API_URL}/races/detailed?limit=30&`
-      if(status){
-        URL+=`statuses=${status}&`
-      }
-      if(page){
-        URL+=`page=${page}`
-      }
-      const response = await fetch(URL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const responseData = await response.json()
-      const data:any = await responseData.data
-      console.log('racelist', responseData)
-      onSuccess(responseData)
-  
-    } catch (error) {
-      console.error('Fetch request failed:', error);
-      onError(error)
+  onSuccess = (data: any) => {},
+  onError = (data: any) => {},
+  status?: string,
+  page?: any,
+) => {
+  let token = localStorage.getItem('token');
+  try {
+    let URL = `${API_URL}/races/detailed?limit=30&`;
+    if (status) {
+      URL += `statuses=${status}&`;
     }
-  };
-
-  export const createDummyRace = async (onSuccess:any, onError:any, formData:any) => {
-    try {
-        const { startDate, startTime, endDate, endTime, raceName, numUsers, numStocks } = formData;
-
-        // Directly use `Date()` conversion like `createRaceAndJoinUser`
-        const startDateTime = new Date(`${startDate}T${startTime}`).toISOString();
-        const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
-
-        const apiBody = {
-            name: raceName,
-            numUsers,
-            numStocks,
-            start_date: startDateTime,
-            end_date: endDateTime,
-        };
-
-        console.log("📤 Sending API Request:", apiBody);
-
-        let token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/race-users/race-simulation`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify(apiBody),
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const responseData = await response.json();
-        console.log("✅ Race Created:", responseData);
-        onSuccess(responseData);
-    } catch (error) {
-        console.error("❌ Error Creating Race:", error);
-        onError(error);
+    if (page) {
+      URL += `page=${page}`;
     }
+    const response = await fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    const data: any = await responseData.data;
+    console.log('racelist', responseData);
+    onSuccess(responseData);
+  } catch (error) {
+    console.error('Fetch request failed:', error);
+    onError(error);
+  }
 };
 
+export const createDummyRace = async (onSuccess: any, onError: any, formData: any) => {
+  try {
+    const { startDate, startTime, endDate, endTime, raceName, numUsers, numStocks } = formData;
 
+    // Directly use `Date()` conversion like `createRaceAndJoinUser`
+    const startDateTime = new Date(`${startDate}T${startTime}`).toISOString();
+    const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
 
-  
-  export const deleteRace = async(onSuccess:any, onError:any,id:string)=>{
-    let token = localStorage.getItem("token"); // Retrieve the token from localStorage
-    
-    try {
-      let URL = `${API_URL}/races/${id}`;  
-      const response = await fetch(URL, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Include token in Authorization header
-        },
-      });  
-      if (response.ok) {
-        // const data = await response.json();
-        const data="ok"
-        onSuccess(data); // Call the success callback with the response data
-      }
+    const apiBody = {
+      name: raceName,
+      numUsers,
+      numStocks,
+      start_date: startDateTime,
+      end_date: endDateTime,
+    };
+
+    let token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/race-users/race-simulation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(apiBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    catch(error:any){
-      onError(error);
-    }
-  } 
 
-export const editRace= async (onSuccess:any,onError:any,id:string,status:string) =>{
-  let token = localStorage.getItem("token"); // Retrieve the token from localStorage
+    const responseData = await response.json();
+
+    onSuccess(responseData);
+  } catch (error) {
+    console.error('Error Creating Race:', error);
+    onError(error);
+  }
+};
+
+export const deleteRace = async (onSuccess: any, onError: any, id: string) => {
+  let token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
   try {
-    let URL = `${API_URL}/races/${id}`;  
+    let URL = `${API_URL}/races/${id}`;
     const response = await fetch(URL, {
-      method: "PATCH",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`, // Include token in Authorization header
       },
-      body: JSON.stringify({"status":status}),
-    });  
+    });
+    if (response.ok) {
+      // const data = await response.json();
+      const data = 'ok';
+      onSuccess(data); // Call the success callback with the response data
+    }
+  } catch (error: any) {
+    onError(error);
+  }
+};
+
+export const editRace = async (onSuccess: any, onError: any, id: string, status: string) => {
+  let token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+  try {
+    let URL = `${API_URL}/races/${id}`;
+    const response = await fetch(URL, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Include token in Authorization header
+      },
+      body: JSON.stringify({ status: status }),
+    });
     if (response.ok) {
       const data = await response.json();
       onSuccess(data); // Call the success callback with the response data
     }
-  }
-  catch(error:any){
+  } catch (error: any) {
     onError(error);
   }
-}
-  
+};
 
 // export const getUsers= async(onSuccess:any, onError:any) => {
 //     let token = localStorage.getItem('token')
@@ -399,47 +394,40 @@ export const editRace= async (onSuccess:any,onError:any,id:string,status:string)
 //     })
 //     console.log("pulic user api",response.json());
 // }
-export const getUsers = async (onSuccess: any, onError: any, page?:any,filter?:any) => {
+export const getUsers = async (onSuccess: any, onError: any, page?: any, filter?: any) => {
   let token = localStorage.getItem('token');
-  
+
   if (!token) {
-    onError("Token is missing or invalid.");
+    onError('Token is missing or invalid.');
     return;
   }
-  let query={};
-  if(filter=="Guest Users"){
-    query={"isGuest": true}
-    
+  let query = {};
+  if (filter == 'Guest Users') {
+    query = { isGuest: true };
   }
-  if(filter=="Bot Users"){
-    query={"isBot": true}
-    
+  if (filter == 'Bot Users') {
+    query = { isBot: true };
+  } else if (filter == 'Admin Users') {
+    query = { roles: [{ id: 1 }] };
+  } else if (filter == 'Inactive Users') {
+    query = { status: '2' };
+  } else if (filter == 'Suspended Users') {
+    query = { status: '3' };
   }
-  else if(filter=="Admin Users"){
-    query={"roles": [{"id": 1}]}
-    
+  let URL = `${API_URL}/users?limit=30&`;
+  if (page) {
+    URL += `page=${page}&`;
   }
-  else if(filter=="Inactive Users"){
-    query={"status": "2"}
-  }
-  else if(filter=="Suspended Users"){
-    query={"status": "3"}
-  }
-  let URL=`${API_URL}/users?limit=30&`
-  if(page){
-    URL+=`page=${page}&`
-  }
-  if(filter){
-    console.log("filter recieved",query)
-    URL+=`filters=${encodeURIComponent(JSON.stringify(query))}`
+  if (filter) {
+    console.log('filter recieved', query);
+    URL += `filters=${encodeURIComponent(JSON.stringify(query))}`;
   }
   try {
-    
     const response = await fetch(URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -449,7 +437,7 @@ export const getUsers = async (onSuccess: any, onError: any, page?:any,filter?:a
 
     // Await the JSON parsing to get the actual data
     const data = await response.json();
-    console.log("Users fetched:", data);
+    console.log('Users fetched:', data);
 
     // Handle the response data
     onSuccess(data);
@@ -460,21 +448,20 @@ export const getUsers = async (onSuccess: any, onError: any, page?:any,filter?:a
 };
 export const getUserJoined = async (onSuccess: any, onError: any) => {
   let token = localStorage.getItem('token');
-  
+
   if (!token) {
-    onError("Token is missing or invalid.");
+    onError('Token is missing or invalid.');
     return;
   }
- 
-  let URL=`${API_URL}/users/predefined-count-summary`
-  
+
+  let URL = `${API_URL}/users/predefined-count-summary`;
+
   try {
-    
     const response = await fetch(URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -493,20 +480,19 @@ export const getUserJoined = async (onSuccess: any, onError: any) => {
   }
 };
 
-
-export const getTotalRacesCount = async (onSuccess: any, onError: any, status?:any) => {
+export const getTotalRacesCount = async (onSuccess: any, onError: any, status?: any) => {
   const token = localStorage.getItem('token');
 
   try {
-    let URL=`${API_URL}/races/count?`
-    if(status){
-        URL+=`statuses=${status}&`
-      }
+    let URL = `${API_URL}/races/count?`;
+    if (status) {
+      URL += `statuses=${status}&`;
+    }
     const response = await fetch(URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -515,12 +501,12 @@ export const getTotalRacesCount = async (onSuccess: any, onError: any, status?:a
     }
 
     if (!response.body) {
-      throw new Error("Readable stream not found in the response.");
+      throw new Error('Readable stream not found in the response.');
     }
 
     const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let result = "";
+    const decoder = new TextDecoder('utf-8');
+    let result = '';
     let done = false;
 
     while (!done) {
@@ -529,7 +515,7 @@ export const getTotalRacesCount = async (onSuccess: any, onError: any, status?:a
       result += decoder.decode(value, { stream: !done });
     }
 
-    console.log("Complete Count Data:", result);
+    console.log('Complete Count Data:', result);
 
     // Parse the result if it's JSON
     const parsedData = JSON.parse(result);
@@ -537,24 +523,24 @@ export const getTotalRacesCount = async (onSuccess: any, onError: any, status?:a
     // Pass the data to the onSuccess callback
     onSuccess(parsedData);
   } catch (error) {
-    console.error("Error fetching total races count:", error);
+    console.error('Error fetching total races count:', error);
     // Pass the error to the onError callback
     onError(error);
   }
 };
-export const getTotalUsersCount = async (onSuccess: any, onError: any, status?:any) => {
+export const getTotalUsersCount = async (onSuccess: any, onError: any, status?: any) => {
   const token = localStorage.getItem('token');
 
   try {
-    let URL=`${API_URL}/users/count?`
-    if(status){
-        URL+=`statuses=${status}&`
-      }
+    let URL = `${API_URL}/users/count?`;
+    if (status) {
+      URL += `statuses=${status}&`;
+    }
     const response = await fetch(URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -563,12 +549,12 @@ export const getTotalUsersCount = async (onSuccess: any, onError: any, status?:a
     }
 
     if (!response.body) {
-      throw new Error("Readable stream not found in the response.");
+      throw new Error('Readable stream not found in the response.');
     }
 
     const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let result = "";
+    const decoder = new TextDecoder('utf-8');
+    let result = '';
     let done = false;
 
     while (!done) {
@@ -577,7 +563,7 @@ export const getTotalUsersCount = async (onSuccess: any, onError: any, status?:a
       result += decoder.decode(value, { stream: !done });
     }
 
-    console.log("Complete Count Data:", result);
+    console.log('Complete Count Data:', result);
 
     // Parse the result if it's JSON
     const parsedData = JSON.parse(result);
@@ -585,14 +571,13 @@ export const getTotalUsersCount = async (onSuccess: any, onError: any, status?:a
     // Pass the data to the onSuccess callback
     onSuccess(parsedData);
   } catch (error) {
-    console.error("Error fetching total races count:", error);
+    console.error('Error fetching total races count:', error);
     // Pass the error to the onError callback
     onError(error);
   }
 };
 
-
-export const suspendUser = async (onSuccess:any, onError:any, id:any, status:any) => {
+export const suspendUser = async (onSuccess: any, onError: any, id: any, status: any) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -601,9 +586,9 @@ export const suspendUser = async (onSuccess:any, onError:any, id:any, status:any
 
     const url = `${API_URL}/users/${id}`;
     const body = JSON.stringify({
-      "status": {
-        "id": status
-      }
+      status: {
+        id: status,
+      },
     }); // Pass `status` in the request body
 
     const response = await fetch(url, {
@@ -630,7 +615,7 @@ export const suspendUser = async (onSuccess:any, onError:any, id:any, status:any
   }
 };
 
-export const updateBotUser = async (onSuccess:any, onError:any, id:any, status:boolean)=>{
+export const updateBotUser = async (onSuccess: any, onError: any, id: any, status: boolean) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -639,7 +624,7 @@ export const updateBotUser = async (onSuccess:any, onError:any, id:any, status:b
 
     const url = `${API_URL}/users/${id}`;
     const body = JSON.stringify({
-      "isBot": status
+      isBot: status,
     }); // Pass `status` in the request body
 
     const response = await fetch(url, {
@@ -664,12 +649,12 @@ export const updateBotUser = async (onSuccess:any, onError:any, id:any, status:b
     console.error('Fetch Error:', error);
     onError(error);
   }
-}
+};
 
 export const createNewAdmin = async (onSuccess: any, onError: any, payload: any) => {
   const token = localStorage.getItem('token');
   if (!token) {
-    onError("Token is missing or invalid.");
+    onError('Token is missing or invalid.');
     return;
   }
 
@@ -678,7 +663,7 @@ export const createNewAdmin = async (onSuccess: any, onError: any, payload: any)
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     });
@@ -692,107 +677,102 @@ export const createNewAdmin = async (onSuccess: any, onError: any, payload: any)
 
     // If the request is successful, handle the success response
     const data = await response.json();
-    onSuccess(data);  // Call the success handler with the response data
-  } catch (error:any) {
+    onSuccess(data); // Call the success handler with the response data
+  } catch (error: any) {
     console.error('Fetch request failed:', error);
     onError(error.message || 'An unexpected error occurred.');
   }
 };
 
-export const searchRaces = async (onSuccess:any,onError:any,query:string)=>{
+export const searchRaces = async (onSuccess: any, onError: any, query: string) => {
   try {
-    const response = await fetch(
-      `${API_URL}/public/search/races?nameContains=${query}`
-    );
+    const response = await fetch(`${API_URL}/public/search/races?nameContains=${query}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch search results");
+      throw new Error('Failed to fetch search results');
     }
     const data = await response.json();
-    console.log(data.data)
+    console.log(data.data);
     onSuccess(data.data);
-  }
-  catch(error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
     onError();
   }
-
 };
-export const searchUsers = async (onSuccess:any,onError:any,query:string)=>{
+export const searchUsers = async (onSuccess: any, onError: any, query: string) => {
   try {
-    const response = await fetch(
-      `${API_URL}/public/search/users?nameContains=${query}`
-    );
+    const response = await fetch(`${API_URL}/public/search/users?nameContains=${query}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch search results");
+      throw new Error('Failed to fetch search results');
     }
     const data = await response.json();
-    console.log(data.data)
+    console.log(data.data);
     onSuccess(data);
-  }
-  catch(error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
     onError();
   }
-
 };
 
-export const getTickets = async (onSuccess:any,onError:any,titleContains?:any,page?:any,filter?:any)=>{
-  let token = localStorage.getItem('token')
-    try {
-      let URL=`${API_URL}/issues?`;
-      if(titleContains){
-        URL+=`titleContains=${titleContains}&`
-      }
-      
-      if(page){
-        URL+=`page=${page}&`
-      }
-      if(filter){
-        if(filter=='Open'){
-          console.log("open")
-          URL+=`status=open`
-        }
-        else if(filter=='Closed'){
-          console.log('closed')
-          URL+=`status=closed`
-        }
-        // URL+=`page=${page}`
-      }
-      
-      const response = await fetch(URL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const responseData = await response.json()
-      console.log("ticket response",responseData)
-      onSuccess(responseData)
-
-}
-catch(error:any){
-  console.log(error)
-  onError()
-}
-}
-
-export const getTicketCount = async (onSuccess:any, onError:any,status?:any)=>{
-  let token=localStorage.getItem("token")
+export const getTickets = async (
+  onSuccess: any,
+  onError: any,
+  titleContains?: any,
+  page?: any,
+  filter?: any,
+) => {
+  let token = localStorage.getItem('token');
   try {
-    let URL=`${API_URL}/issues/count?`
-    if(status){
-        URL+=`status=${status}&`
+    let URL = `${API_URL}/issues?`;
+    if (titleContains) {
+      URL += `titleContains=${titleContains}&`;
+    }
+
+    if (page) {
+      URL += `page=${page}&`;
+    }
+    if (filter) {
+      if (filter == 'Open') {
+        console.log('open');
+        URL += `status=open`;
+      } else if (filter == 'Closed') {
+        console.log('closed');
+        URL += `status=closed`;
       }
+      // URL+=`page=${page}`
+    }
+
     const response = await fetch(URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const responseData = await response.json();
+    console.log('ticket response', responseData);
+    onSuccess(responseData);
+  } catch (error: any) {
+    console.log(error);
+    onError();
+  }
+};
+
+export const getTicketCount = async (onSuccess: any, onError: any, status?: any) => {
+  let token = localStorage.getItem('token');
+  try {
+    let URL = `${API_URL}/issues/count?`;
+    if (status) {
+      URL += `status=${status}&`;
+    }
+    const response = await fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -801,12 +781,12 @@ export const getTicketCount = async (onSuccess:any, onError:any,status?:any)=>{
     }
 
     if (!response.body) {
-      throw new Error("Readable stream not found in the response.");
+      throw new Error('Readable stream not found in the response.');
     }
 
     const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let result = "";
+    const decoder = new TextDecoder('utf-8');
+    let result = '';
     let done = false;
 
     while (!done) {
@@ -815,7 +795,7 @@ export const getTicketCount = async (onSuccess:any, onError:any,status?:any)=>{
       result += decoder.decode(value, { stream: !done });
     }
 
-    console.log("Complete issue Data:", result);
+    console.log('Complete issue Data:', result);
 
     // Parse the result if it's JSON
     const parsedData = JSON.parse(result);
@@ -823,12 +803,11 @@ export const getTicketCount = async (onSuccess:any, onError:any,status?:any)=>{
     // Pass the data to the onSuccess callback
     onSuccess(parsedData);
   } catch (error) {
-    console.error("Error fetching total races count:", error);
+    console.error('Error fetching total races count:', error);
     // Pass the error to the onError callback
     onError(error);
   }
-  
-}
+};
 
 export const createTicket = async (
   onSuccess: (response: any) => void,
@@ -836,9 +815,9 @@ export const createTicket = async (
   area: string,
   title: string,
   desc: string,
-  priority: string
+  priority: string,
 ) => {
-  let token = localStorage.getItem("token"); // Retrieve the token from localStorage
+  let token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
   try {
     let URL = `${API_URL}/issues`;
@@ -847,16 +826,16 @@ export const createTicket = async (
     const payload = {
       area: area,
       priority: priority,
-      status: "Open", // Default status
+      status: 'Open', // Default status
       description: desc,
       title: title,
     };
 
     // Send POST request to the API
     const response = await fetch(URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`, // Include token in Authorization header
       },
       body: JSON.stringify(payload),
@@ -872,85 +851,81 @@ export const createTicket = async (
   } catch (error) {
     onError(error); // Handle any network or unexpected errors
   }
-}
+};
 
-export const editTicket = async (onSuccess:any,onError:any,id:string,payload:any)=>{
-  let token = localStorage.getItem("token"); // Retrieve the token from localStorage
+export const editTicket = async (onSuccess: any, onError: any, id: string, payload: any) => {
+  let token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
   try {
-    let URL = `${API_URL}/issues/${id}`;  
+    let URL = `${API_URL}/issues/${id}`;
     const response = await fetch(URL, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`, // Include token in Authorization header
       },
       body: JSON.stringify(payload),
-    });  
+    });
     if (response.ok) {
       const data = await response.json();
       onSuccess(data); // Call the success callback with the response data
     }
-  }
-  catch(error:any){
+  } catch (error: any) {
     onError(error);
   }
+};
 
-}
-
-export const deleteTicket = async(onSuccess:any, onError:any,id:string)=>{
-  let token = localStorage.getItem("token"); // Retrieve the token from localStorage
+export const deleteTicket = async (onSuccess: any, onError: any, id: string) => {
+  let token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
   try {
-    let URL = `${API_URL}/issues/${id}`;  
+    let URL = `${API_URL}/issues/${id}`;
     const response = await fetch(URL, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`, // Include token in Authorization header
       },
-    });  
+    });
     if (response.ok) {
       const data = await response.json();
       onSuccess(data); // Call the success callback with the response data
     }
-  }
-  catch(error:any){
+  } catch (error: any) {
     onError(error);
   }
-}
+};
 
-export const getTicketDetails = async(onSuccess:any,onError:any,id:any)=>{
-  let token=localStorage.getItem('token');
+export const getTicketDetails = async (onSuccess: any, onError: any, id: any) => {
+  let token = localStorage.getItem('token');
 
   try {
-    let URL = `${API_URL}/issues/${id}`;  
+    let URL = `${API_URL}/issues/${id}`;
     const response = await fetch(URL, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`, // Include token in Authorization header
       },
-    });  
+    });
     if (response.ok) {
       const data = await response.json();
       onSuccess(data); // Call the success callback with the response data
     }
-  }
-  catch(error:any){
+  } catch (error: any) {
     onError(error);
   }
-}
+};
 
 export const getTicketComments = async (onSuccess: any, onError: any, id: any) => {
-  let token = localStorage.getItem("token");
+  let token = localStorage.getItem('token');
 
   try {
     let URL = `${API_URL}/issue-comments?issue_id=${id}`;
     const response = await fetch(URL, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
@@ -966,17 +941,16 @@ export const getTicketComments = async (onSuccess: any, onError: any, id: any) =
       onError(`Error ${response.status}: ${textResponse}`);
     }
   } catch (error) {
-    console.error("Error during API call:", error);
+    console.error('Error during API call:', error);
     onError(error);
   }
 };
-
 
 export const postTicketComments = async (onSuccess: any, onError: any, id: any, comment: any) => {
   let token = localStorage.getItem('token');
 
   if (!token) {
-    onError("Authorization token is missing.");
+    onError('Authorization token is missing.');
     return;
   }
 
@@ -985,7 +959,6 @@ export const postTicketComments = async (onSuccess: any, onError: any, id: any, 
     issue_id: id,
   };
 
-
   try {
     const URL = `${API_URL}/issue-comments`;
 
@@ -993,14 +966,14 @@ export const postTicketComments = async (onSuccess: any, onError: any, id: any, 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("API Error Response:", errorText);
+      console.error('API Error Response:', errorText);
       onError(`Error ${response.status}: ${errorText}`);
       return;
     }
@@ -1008,32 +981,30 @@ export const postTicketComments = async (onSuccess: any, onError: any, id: any, 
     const data = await response.json();
     onSuccess(data);
   } catch (error) {
-    console.error("Request Error:", error);
+    console.error('Request Error:', error);
     onError(error);
   }
 };
 
-
-export const getLeaderboard = async (onSuccess:any,onError:any,page?:any)=>{
+export const getLeaderboard = async (onSuccess: any, onError: any, page?: any) => {
   let token = localStorage.getItem('token');
-  
+
   if (!token) {
-    onError("Token is missing or invalid.");
+    onError('Token is missing or invalid.');
     return;
   }
-  let URL=`${API_URL}/race-results/stats?limit=30&`;
+  let URL = `${API_URL}/race-results/stats?limit=30&`;
 
-  if(page){
-    URL+=`page=${page}&`
+  if (page) {
+    URL += `page=${page}&`;
   }
 
   try {
-    
     const response = await fetch(URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -1043,7 +1014,7 @@ export const getLeaderboard = async (onSuccess:any,onError:any,page?:any)=>{
 
     // Await the JSON parsing to get the actual data
     const data = await response.json();
-    console.log("Leaderboard fetched:", data);
+    console.log('Leaderboard fetched:', data);
 
     // Handle the response data
     onSuccess(data);
@@ -1051,5 +1022,4 @@ export const getLeaderboard = async (onSuccess:any,onError:any,page?:any)=>{
     console.error('Fetch request failed:', error);
     onError(error); // Call error handler with the error message
   }
-}
-
+};

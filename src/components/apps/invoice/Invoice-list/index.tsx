@@ -1,6 +1,6 @@
-import { getRaceList,searchRaces,getTotalRacesCount, deleteRace, editRace } from "src/utils/api";
-import  { useContext, useState, useEffect } from "react";
-import { createDummyRace } from "src/utils/api";
+import { getRaceList, searchRaces, getTotalRacesCount, deleteRace, editRace } from 'src/utils/api';
+import { useContext, useState, useEffect } from 'react';
+import { createDummyRace } from 'src/utils/api';
 import {
   Checkbox,
   Table,
@@ -10,86 +10,85 @@ import {
   Badge,
   Tooltip,
   Spinner,
-  Dropdown
-} from "flowbite-react";
-import SimpleBar from "simplebar-react";
+  Dropdown,
+} from 'flowbite-react';
+import SimpleBar from 'simplebar-react';
 
-import { Icon } from "@iconify/react";
-import {FINRACES_URL} from "src/config.ts"
+import { Icon } from '@iconify/react';
+import { FINRACES_URL } from 'src/config.ts';
 
-import { Link, useNavigate } from "react-router";
-import { InvoiceContext } from "src/context/InvoiceContext";
+import { Link, useNavigate } from 'react-router';
+import { InvoiceContext } from 'src/context/InvoiceContext';
 
 function InvoiceList() {
-  const {deleteInvoice } = useContext(InvoiceContext);
-  const [searchTerm, setSearchTerm] = useState("");
+  const { deleteInvoice } = useContext(InvoiceContext);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState('All');
   const [selectedProducts, setSelectedProducts] = useState<any>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [invoices,setInvoices]=useState([])
+  const [invoices, setInvoices] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [finishedRaces, setFinishedRaces] = useState(0);
-  const [totalRaces,setTotalRaces]=useState(0);
+  const [totalRaces, setTotalRaces] = useState(0);
   const [activeRaces, setActiveRaces] = useState(0);
   const [upcomingRaces, setUpcomingRaces] = useState(0); // State to store total races
-  const [selectedRace,setSelectedRace]=useState<any>({});
-  const [change,setChange]=useState(false);
-  const [showModal,setShowModal]=useState(false);
-  
-  useEffect(()=>{
-    
+  const [selectedRace, setSelectedRace] = useState<any>({});
+  const [change, setChange] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
     getTotalRacesCount(
-      (data:any)=>{  
+      (data: any) => {
         setFinishedRaces(data);
       },
-    ()=>{},
-    "finished"),
-    getTotalRacesCount(
-      (data:any)=>{  
-        setTotalRaces(data);
-      },
-    ()=>{},
-    ""),
+      () => {},
+      'finished',
+    ),
       getTotalRacesCount(
-      (data:any)=>{  
-        setUpcomingRaces(data);
-      },
-    ()=>{},
-    "scheduled"),
-    getTotalRacesCount(
-      (data:any)=>{  
-        setActiveRaces(data);
-      },
-    ()=>{},
-    "running")
-    
-      },[change])
+        (data: any) => {
+          setTotalRaces(data);
+        },
+        () => {},
+        '',
+      ),
+      getTotalRacesCount(
+        (data: any) => {
+          setUpcomingRaces(data);
+        },
+        () => {},
+        'scheduled',
+      ),
+      getTotalRacesCount(
+        (data: any) => {
+          setActiveRaces(data);
+        },
+        () => {},
+        'running',
+      );
+  }, [change]);
   useEffect(() => {
-    setLoading(true)
-          // Fetch race list on component mount
-      
-          getRaceList(
-             // Status can be dynamic
-            (data:any) => {
-              //setUpcomingRaces(data?.length || 0); // Update total races
-              //setLoading(false);
-              setInvoices(data.data);
-              setHasNextPage(data.hasNextPage)
-              setLoading(false)
-      
-            },
-            (error:any) => {
-              console.error("Error fetching races:", error);
-              //setLoading(false);
-            },
-            
-          );
-        }, [change]);
-  
-  
+    setLoading(true);
+    // Fetch race list on component mount
+
+    getRaceList(
+      // Status can be dynamic
+      (data: any) => {
+        //setUpcomingRaces(data?.length || 0); // Update total races
+        //setLoading(false);
+        setInvoices(data.data);
+        setHasNextPage(data.hasNextPage);
+        setLoading(false);
+      },
+      (error: any) => {
+        console.error('Error fetching races:', error);
+        //setLoading(false);
+      },
+    );
+  }, [change]);
+
   // Filter invoices based on search term
   // const filteredInvoices = invoices.filter(
   //   (invoice: { name: string; created_by: any; status: string }) => {
@@ -103,15 +102,15 @@ function InvoiceList() {
   //   }
   // );
 
-  type colorsType={
-    [key:string]:string
-  }
-  let colors:colorsType={
-    "running":"lightsuccess",
-    "scheduled":"lightsecondary",
-    "finished":"lightwarning"
-  }
-  const formatDate = (dateString:any) => {
+  type colorsType = {
+    [key: string]: string;
+  };
+  let colors: colorsType = {
+    running: 'lightsuccess',
+    scheduled: 'lightsecondary',
+    finished: 'lightwarning',
+  };
+  const formatDate = (dateString: any) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB'); // "dd/mm/yyyy" format
   };
@@ -120,112 +119,106 @@ function InvoiceList() {
     setActiveTab(tabName);
     getRaceList(
       // Status can be dynamic
-      (data:any) => {
-      //setUpcomingRaces(data?.length || 0); // Update total races
-      //setLoading(false);
-      setInvoices(data.data);
-      setHasNextPage(data.hasNextPage)
-        
-      },
-      (error:any) => {
-        console.error("Error fetching races:", error);
+      (data: any) => {
+        //setUpcomingRaces(data?.length || 0); // Update total races
         //setLoading(false);
-        },
-        tabName,
-              
-      );
+        setInvoices(data.data);
+        setHasNextPage(data.hasNextPage);
+      },
+      (error: any) => {
+        console.error('Error fetching races:', error);
+        //setLoading(false);
+      },
+      tabName,
+    );
   };
 
-  const nextPage=()=>{
-    setPage(page+1);
-     getRaceList(
+  const nextPage = () => {
+    setPage(page + 1);
+    getRaceList(
       // Status can be dynamic
-      (data:any) => {
-      //setUpcomingRaces(data?.length || 0); // Update total races
-      //setLoading(false);
-      console.log
-      setInvoices(data.data);
-      setHasNextPage(data.hasNextPage)
-        
-      },
-      (error:any) => {
-        console.error("Error fetching races:", error);
+      (data: any) => {
+        //setUpcomingRaces(data?.length || 0); // Update total races
         //setLoading(false);
-        },
-        undefined,
-        page+1
-              
-      );
-
-  }
-  const prevPage=()=>{
-    setPage(page-1);
-     getRaceList(
+        console.log;
+        setInvoices(data.data);
+        setHasNextPage(data.hasNextPage);
+      },
+      (error: any) => {
+        console.error('Error fetching races:', error);
+        //setLoading(false);
+      },
+      undefined,
+      page + 1,
+    );
+  };
+  const prevPage = () => {
+    setPage(page - 1);
+    getRaceList(
       // Status can be dynamic
-      (data:any) => {
-      //setUpcomingRaces(data?.length || 0); // Update total races
-      //setLoading(false);
-      setInvoices(data.data);
-      setHasNextPage(data.hasNextPage)
-        
-      },
-      (error:any) => {
-        console.error("Error fetching races:", error);
+      (data: any) => {
+        //setUpcomingRaces(data?.length || 0); // Update total races
         //setLoading(false);
-        },
-        undefined,
-        page-1
-              
-      );
-
-  }
-  const updateRaceStatus=(id:string,selectedStatus:string)=>{
+        setInvoices(data.data);
+        setHasNextPage(data.hasNextPage);
+      },
+      (error: any) => {
+        console.error('Error fetching races:', error);
+        //setLoading(false);
+      },
+      undefined,
+      page - 1,
+    );
+  };
+  const updateRaceStatus = (id: string, selectedStatus: string) => {
     editRace(
-      ()=>{setChange(!change)},
-      (error:any)=>{console.log(error)},
+      () => {
+        // setChange(!change);
+      },
+      (error: any) => {
+        console.log(error);
+      },
       id,
-      selectedStatus
-    )
-  }
+      selectedStatus,
+    );
+  };
 
   // Calculate the counts for different statuses
-  const Ongoing = invoices.filter((t: { status: string }) => t.status === "running").length;
-  const Scheduled = invoices.filter((t: { status: string }) => t.status === "scheduled").length;
-  const Finished = invoices.filter((t: { status: string }) => t.status === "finished").length;
+  const Ongoing = invoices.filter((t: { status: string }) => t.status === 'running').length;
+  const Scheduled = invoices.filter((t: { status: string }) => t.status === 'scheduled').length;
+  const Finished = invoices.filter((t: { status: string }) => t.status === 'finished').length;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
 
     // setSearchTerm(query);
-    if (query.trim() !== "" && e.target.value.length>=3) {
+    if (query.trim() !== '' && e.target.value.length >= 3) {
       searchRaces(
-        (data:any) =>{ 
+        (data: any) => {
           setInvoices(data);
-          setHasNextPage(data.hasNextPage)
-          console.log("invoices updates")
+          setHasNextPage(data.hasNextPage);
+          console.log('invoices updates');
         },
-        (error:any) => console.error("Error during search:", error),
-        query
+        (error: any) => console.error('Error during search:', error),
+        query,
       );
     } else {
       getRaceList(
         // Status can be dynamic
-        (data:any) => {
-        //setUpcomingRaces(data?.length || 0); // Update total races
-        //setLoading(false);
-        setInvoices(data.data);
-        setHasNextPage(data.hasNextPage)
-        console.log("invoices set up")
-          
-        },
-        (error:any) => {
-          console.error("Error fetching races:", error);
+        (data: any) => {
+          //setUpcomingRaces(data?.length || 0); // Update total races
           //setLoading(false);
-          },
-          undefined,
-          page
-                
-        ); // Reset to full list if search is cleared
+          setInvoices(data.data);
+          setHasNextPage(data.hasNextPage);
+          console.log('invoices set up');
+        },
+        (error: any) => {
+          console.error('Error fetching races:', error);
+          //setLoading(false);
+        },
+        undefined,
+        page,
+      ); // Reset to full list if search is cleared
     }
   };
   // Toggle all checkboxes
@@ -250,9 +243,9 @@ function InvoiceList() {
   };
 
   // Handle opening delete confirmation dialog
-  const handleDelete = (invoice:any) => {
+  const handleDelete = (invoice: any) => {
     setSelectedRace(invoice);
-    console.log(invoice.id)
+    console.log(invoice.id);
     setOpenDeleteDialog(true);
   };
 
@@ -264,13 +257,15 @@ function InvoiceList() {
     // setSelectedProducts([]);
     // setSelectAll(false);
     deleteRace(
-      (data:any)=>{
-        console.log(data)
-        setChange(!change)
+      (data: any) => {
+        console.log(data);
+        setChange(!change);
       },
-      (data:any)=>{console.log(data)},
-      selectedRace.id    
-    )
+      (data: any) => {
+        console.log(data);
+      },
+      selectedRace.id,
+    );
     setOpenDeleteDialog(false);
   };
 
@@ -279,13 +274,12 @@ function InvoiceList() {
     setOpenDeleteDialog(false);
   };
 
-  const handleNavigate=(invoice:any)=>{
+  const handleNavigate = (invoice: any) => {
     // const URL=process.env.REACT_APP_FINRACES_URL
-    const URL=FINRACES_URL
-    window.open(`${URL}/race/${invoice.id}`)
+    const URL = FINRACES_URL;
+    window.open(`${URL}/race/${invoice.id}`);
     // navigate(`https://finraces-app.netlify.app/race/${invoice.id}`)
-  }
-
+  };
 
   const generateRandomStockRaceName = () => {
     // Get user details from localStorage
@@ -293,10 +287,9 @@ function InvoiceList() {
     if (!encodedUserDetails) {
       // throw new Error("User details not found in localStorage");
       // probably be guest
-      encodedUserDetails = localStorage.getItem('guest_details')
+      encodedUserDetails = localStorage.getItem('guest_details');
       if (!encodedUserDetails) {
-        throw new Error("User details not found in localStorage");
-
+        throw new Error('User details not found in localStorage');
       }
     }
 
@@ -305,213 +298,237 @@ function InvoiceList() {
     const userName = decodedUserDetails.userName;
 
     if (!userName) {
-      throw new Error("Username not found in userDetails");
+      throw new Error('Username not found in userDetails');
     }
 
     // Creative stock-related phrases
     const stockPhrases = [
-      "Charge of the Bulls",
+      'Charge of the Bulls',
       "Bear's Retreat",
-      "Portfolio Blitz",
+      'Portfolio Blitz',
       "Trader's Triumph",
-      "Capital Crusade",
-      "Equity Escapade",
-      "Stock Surge Showdown",
+      'Capital Crusade',
+      'Equity Escapade',
+      'Stock Surge Showdown',
       "Investor's Arena",
-      "Exchange Frenzy",
-      "Market Mayhem"
+      'Exchange Frenzy',
+      'Market Mayhem',
     ];
 
     // Generate a random phrase
     const randomPhrase = stockPhrases[Math.floor(Math.random() * stockPhrases.length)];
-    let today = Date.now()
+    let today = Date.now();
     // Generate the race name
     return `${userName}'s ${randomPhrase} ${today}`;
   };
-  
   const demoRaceCreation = async () => {
     const now = new Date();
-    now.setMinutes(now.getMinutes() + 2); // Add 2 minutes delay before the first race
+    now.setUTCMinutes(now.getUTCMinutes() + 5); // Give a buffer to avoid past errors
 
     let races = [];
 
     for (let i = 0; i < 30; i++) {
-        const startTime = new Date(now.getTime() + i * (60 * 60 * 1000 + 2 * 60 * 1000)); // Add 1 hour + 2 minutes buffer
-        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // End time is +1 hour
+      const startTime = new Date(now.getTime() + i * (62 * 60 * 1000)); // 1h2m apart
+      const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // +1 hour
 
-        const raceData = {
-            id: i + 1,
-            raceName: generateRandomStockRaceName(),
-            numUsers: 5,
-            numStocks: 5,
-            startDate: startTime.toISOString().split("T")[0], // Format YYYY-MM-DD
-            endDate: endTime.toISOString().split("T")[0],
-            startTime: startTime.toTimeString().split(" ")[0], // Format HH:MM:SS
-            endTime: endTime.toTimeString().split(" ")[0],
-        };
+      const startISOString = startTime.toISOString(); // full UTC ISO string
+      const endISOString = endTime.toISOString();
 
-        races.push(raceData);
+      const raceData = {
+        id: i + 1,
+        raceName: generateRandomStockRaceName(),
+        numUsers: 5,
+        numStocks: 5,
+        startDate: startISOString.split('T')[0], // 'YYYY-MM-DD'
+        startTime: startISOString.split('T')[1].split('.')[0] + 'Z', // force UTC
+        endDate: endISOString.split('T')[0],
+        endTime: endISOString.split('T')[1].split('.')[0] + 'Z', // force UTC
+      };
+
+      races.push(raceData);
     }
 
-    console.log("Generated Races:", races);
+    console.log('Generated Races:', races);
 
-    for (let race of races) {
-        try {
-            await createDummyRace(
-                (data) => console.log("✅ Race Created:", data),
-                (error) => console.error("❌ Error Creating Race:", error),
-                race
-            );
-        } catch (error) {
-            console.error("❌ Error in API call:", error);
-        }
-    }
+    const results = await Promise.allSettled(
+      races.map(
+        (race) =>
+          new Promise((resolve, reject) => {
+            createDummyRace(resolve, reject, race);
+          }),
+      ),
+    );
 
-    setShowModal(false)
-};
+    results.forEach((result, idx) => {
+      if (result.status === 'fulfilled') {
+        console.log(`✅ Race ${idx + 1} Created:`, result.value);
+      } else {
+        console.error(`❌ Race ${idx + 1} Failed:`, result.reason);
+      }
+    });
 
-
-
+    setChange((prev) => !prev);
+    setShowModal(false);
+  };
 
   return (
-    
     <div className="overflow-x-auto">
-      {loading?(<div className="flex justify-center items-center h-64">
-        <Spinner size="xl"/>
-      </div>):(<>
-      <div className="flex justify-between overflow-x-auto mb-8 gap-6 ">
-        {/* Summary sections */}
-        <div
-          className={`flex gap-3 items-center sm:w-3/12 w-full mb-2 cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${activeTab == "" ? "bg-muted dark:bg-darkmuted" : null}   `}
-          onClick={() => handleTabClick("")}
-        >
-          <div className="h-14 w-14 rounded-full border-2 border-primary text-primary flex justify-center items-center">
-            <Icon icon="mdi:format-list-numbered" height={25} />
-          </div>
-          <div>
-            <h5 className="text-base">Total</h5>
-            <p className="text-ld opacity-80">{totalRaces} Races</p>
-            {/* <h6 className="text-sm">$46,218.04</h6> */}
-          </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner size="xl" />
         </div>
-        <div
-          className={`flex gap-3 items-center sm:w-3/12 w-full mb-2 cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${activeTab == "running" ? "bg-muted dark:bg-darkmuted" : null
-            }`}
-          onClick={() => handleTabClick("running")}
-        >
-          <div className="h-14 w-14 rounded-full border-2 border-success text-success flex justify-center items-center">
-            <Icon icon="mdi:play-circle-outline" height={25} />
+      ) : (
+        <>
+          <div className="flex justify-between overflow-x-auto mb-8 gap-6 ">
+            {/* Summary sections */}
+            <div
+              className={`flex gap-3 items-center sm:w-3/12 w-full mb-2 cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${
+                activeTab == '' ? 'bg-muted dark:bg-darkmuted' : null
+              }   `}
+              onClick={() => handleTabClick('')}
+            >
+              <div className="h-14 w-14 rounded-full border-2 border-primary text-primary flex justify-center items-center">
+                <Icon icon="mdi:format-list-numbered" height={25} />
+              </div>
+              <div>
+                <h5 className="text-base">Total</h5>
+                <p className="text-ld opacity-80">{totalRaces} Races</p>
+                {/* <h6 className="text-sm">$46,218.04</h6> */}
+              </div>
+            </div>
+            <div
+              className={`flex gap-3 items-center sm:w-3/12 w-full mb-2 cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${
+                activeTab == 'running' ? 'bg-muted dark:bg-darkmuted' : null
+              }`}
+              onClick={() => handleTabClick('running')}
+            >
+              <div className="h-14 w-14 rounded-full border-2 border-success text-success flex justify-center items-center">
+                <Icon icon="mdi:play-circle-outline" height={25} />
+              </div>
+              <div>
+                <h5 className="text-base">Running</h5>
+                <p className="text-ld opacity-80">{activeRaces} Races</p>
+                {/* <h6 className="text-sm">$23,110.23</h6> */}
+              </div>
+            </div>
+            <div
+              className={`flex gap-3 items-center sm:w-3/12 w-full mb-2 cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${
+                activeTab == 'scheduled' ? 'bg-muted dark:bg-darkmuted' : null
+              }`}
+              onClick={() => handleTabClick('scheduled')}
+            >
+              <div className="h-14 w-14 rounded-full border-2 border-secondary text-secondary flex justify-center items-center">
+                <Icon icon="tabler:clock-pin" height={25} />
+              </div>
+              <div>
+                <h5 className="text-base">Scheduled</h5>
+                <p className="text-ld opacity-80">{upcomingRaces} Races</p>
+                {/* <h6 className="text-sm">$13,825.05</h6> */}
+              </div>
+            </div>
+            <div
+              className={`flex gap-3 items-center sm:w-3/12 w-full mb-2  cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${
+                activeTab == 'finished' ? 'bg-muted dark:bg-darkmuted' : null
+              }`}
+              onClick={() => handleTabClick('finished')}
+            >
+              <div className="h-14 w-14 rounded-full border-2 border-warning text-warning flex justify-center items-center">
+                <Icon icon="mdi:check-circle" height={25} />
+              </div>
+              <div>
+                <h5 className="text-base">Finished</h5>
+                <p className="text-ld opacity-80">{finishedRaces} Races</p>
+                {/* <h6 className="text-sm">$4,655.63</h6> */}
+              </div>
+            </div>
           </div>
-          <div>
-            <h5 className="text-base">Running</h5>
-            <p className="text-ld opacity-80">{activeRaces} Races</p>
-            {/* <h6 className="text-sm">$23,110.23</h6> */}
-          </div>
-        </div>
-        <div
-          className={`flex gap-3 items-center sm:w-3/12 w-full mb-2 cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${activeTab == "scheduled" ? "bg-muted dark:bg-darkmuted" : null
-            }`}
-          onClick={() => handleTabClick("scheduled")}
-        >
-          <div className="h-14 w-14 rounded-full border-2 border-secondary text-secondary flex justify-center items-center">
-            <Icon icon="tabler:clock-pin" height={25} />
-          </div>
-          <div>
-            <h5 className="text-base">Scheduled</h5>
-            <p className="text-ld opacity-80">{upcomingRaces} Races</p>
-            {/* <h6 className="text-sm">$13,825.05</h6> */}
-          </div>
-        </div>
-        <div
-          className={`flex gap-3 items-center sm:w-3/12 w-full mb-2  cursor-pointer p-5 rounded-lg hover:bg-muted dark:hover:bg-darkmuted ${activeTab == "finished" ? "bg-muted dark:bg-darkmuted" : null
-            }`}
-          onClick={() => handleTabClick("finished")}
-        >
-          <div className="h-14 w-14 rounded-full border-2 border-warning text-warning flex justify-center items-center">
-            <Icon icon="mdi:check-circle" height={25} />
-          </div>
-          <div>
-            <h5 className="text-base">Finished</h5>
-            <p className="text-ld opacity-80">{finishedRaces} Races</p>
-            {/* <h6 className="text-sm">$4,655.63</h6> */}
-          </div>
-        </div>
-      </div>
-      <div className="sm:flex justify-between my-6">
-        <div>
-          <TextInput
-            id="dis"
-            type="text"
-            className="form-control"
-            placeholder="search"
-            //value={searchTerm}
-            icon={() => <Icon icon="solar:magnifer-line-duotone" height={18} />}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="sm:flex justify-between gap-5">
-        {/* <Button color={"error"} className="sm:w-fit w-full sm:mt-0 mt-4 mr-2">
+          <div className="sm:flex justify-between my-6">
+            <div>
+              <TextInput
+                id="dis"
+                type="text"
+                className="form-control"
+                placeholder="search"
+                //value={searchTerm}
+                icon={() => <Icon icon="solar:magnifer-line-duotone" height={18} />}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="sm:flex justify-between gap-5">
+              {/* <Button color={"error"} className="sm:w-fit w-full sm:mt-0 mt-4 mr-2">
          Delete Race
         </Button> */}
-        <Button onClick={()=>{setShowModal(true)}} color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
-         Create 30 Demo Races
-        </Button>
-        <Button color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
-          <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
-        </Button>
-        </div> 
-        {/* <Button color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
+              <Button
+                onClick={() => {
+                  setShowModal(true);
+                }}
+                color={'primary'}
+                className="sm:w-fit w-full sm:mt-0 mt-4"
+              >
+                Create 30 Demo Races
+              </Button>
+              <Button color={'primary'} className="sm:w-fit w-full sm:mt-0 mt-4">
+                <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
+              </Button>
+            </div>
+            {/* <Button color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
           <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
         </Button> */}
-      </div>
-      <div className=" h-[70vh] custom-scrollbar">
-      <div className="overflow-x-auto ">
-        <Table hoverable>
-          <Table.Head>
-            <Table.HeadCell className="p-4">
-              <Checkbox
-                className="checkbox"
-                checked={selectAll}
-                onChange={toggleSelectAll}
-              />
-            </Table.HeadCell>
-            {/* <Table.HeadCell>ID</Table.HeadCell> */}
-            <Table.HeadCell>Race Name</Table.HeadCell>
-            <Table.HeadCell>Created By</Table.HeadCell>
-            <Table.HeadCell>Start Date</Table.HeadCell>
-            <Table.HeadCell>End Date</Table.HeadCell>
-            <Table.HeadCell>STATUS</Table.HeadCell>
-            <Table.HeadCell className="text-center">Actions</Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y divide-border dark:divide-darkborder">
-            {invoices.map((invoice: {
-              id: any;
-              name: any;
-              created_by: any;
-              start_date: any;
-              end_date:any;
-              status: any;
-            }) => (
-              
-              <Table.Row key={invoice.id}  className="cursor-pointer">
-                <Table.Cell className="p-4">
-                  <Checkbox
-                    className="checkbox"
-                    onChange={() => toggleSelectProduct(invoice.id)}
-                    checked={selectedProducts.includes(invoice.id)}
-                  />
-                </Table.Cell>
-                {/* <Table.Cell className="whitespace-nowrap">
+          </div>
+          <div className=" h-[70vh] custom-scrollbar">
+            <div className="overflow-x-auto ">
+              <Table hoverable>
+                <Table.Head>
+                  <Table.HeadCell className="p-4">
+                    <Checkbox className="checkbox" checked={selectAll} onChange={toggleSelectAll} />
+                  </Table.HeadCell>
+                  {/* <Table.HeadCell>ID</Table.HeadCell> */}
+                  <Table.HeadCell>Race Name</Table.HeadCell>
+                  <Table.HeadCell>Created By</Table.HeadCell>
+                  <Table.HeadCell>Start Date</Table.HeadCell>
+                  <Table.HeadCell>End Date</Table.HeadCell>
+                  <Table.HeadCell>STATUS</Table.HeadCell>
+                  <Table.HeadCell className="text-center">Actions</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y divide-border dark:divide-darkborder">
+                  {invoices.map(
+                    (invoice: {
+                      id: any;
+                      name: any;
+                      created_by: any;
+                      start_date: any;
+                      end_date: any;
+                      status: any;
+                    }) => (
+                      <Table.Row key={invoice.id} className="cursor-pointer">
+                        <Table.Cell className="p-4">
+                          <Checkbox
+                            className="checkbox"
+                            onChange={() => toggleSelectProduct(invoice.id)}
+                            checked={selectedProducts.includes(invoice.id)}
+                          />
+                        </Table.Cell>
+                        {/* <Table.Cell className="whitespace-nowrap">
                   <h5 className="text-sm">{invoice.id}</h5>
                 </Table.Cell> */}
-                <Table.Cell onClick={()=>{handleNavigate(invoice)} }>
-                  <h5 className="text-sm hover:underline hover:text-blue-400">{invoice.name}</h5>
-                </Table.Cell>
-                <Table.Cell className="text-ld">{invoice.created_by.firstName} {invoice.created_by.lastName}</Table.Cell>
-                <Table.Cell className="text-ld">{formatDate(invoice.start_date)}</Table.Cell>
-                <Table.Cell className="text-ld">{formatDate(invoice.end_date)}</Table.Cell>
-                <Table.Cell>
-                  {/* {invoice.status === "running" ? (
+                        <Table.Cell
+                          onClick={() => {
+                            handleNavigate(invoice);
+                          }}
+                        >
+                          <h5 className="text-sm hover:underline hover:text-blue-400">
+                            {invoice.name}
+                          </h5>
+                        </Table.Cell>
+                        <Table.Cell className="text-ld">
+                          {invoice.created_by.firstName} {invoice.created_by.lastName}
+                        </Table.Cell>
+                        <Table.Cell className="text-ld">
+                          {formatDate(invoice.start_date)}
+                        </Table.Cell>
+                        <Table.Cell className="text-ld">{formatDate(invoice.end_date)}</Table.Cell>
+                        <Table.Cell>
+                          {/* {invoice.status === "running" ? (
                     <Badge color="success">{invoice.status}</Badge>
                   ) : invoice.status === "scheduled" ? (
                     <Badge color="secondary">{invoice.status}</Badge>
@@ -520,134 +537,133 @@ function InvoiceList() {
                   ) : (
                     ""
                   )} */}
-                  {invoice.status==="finished"?(
-                    // <Badge color="warning">Finished</Badge>
-                    <Dropdown
-                    size="sm"
-                    placement="bottom-end"
-                    label={"Finished"}
-                    color={colors[invoice.status]}
-                    theme={{arrowIcon:"hidden"}}
-                    >
-                    </Dropdown>
-                  ):(
-                    <Dropdown
-                    size="sm"
-                    placement="bottom-end"
-                    label={invoice.status==="scheduled"?"Scheduled":"Running"}
-                    color={colors[invoice.status]}
-                    
-                    //color={invoice.status=="running"?"success":{invoice.status=="scheduled"?"secondary":"warning"}}
-                    
-                  >
-                    {/* <Dropdown.Item onClick={()=>{updateRaceStatus(invoice.id, "running")}} >
+                          {invoice.status === 'finished' ? (
+                            // <Badge color="warning">Finished</Badge>
+                            <Dropdown
+                              size="sm"
+                              placement="bottom-end"
+                              label={'Finished'}
+                              color={colors[invoice.status]}
+                              theme={{ arrowIcon: 'hidden' }}
+                            ></Dropdown>
+                          ) : (
+                            <Dropdown
+                              size="sm"
+                              placement="bottom-end"
+                              label={invoice.status === 'scheduled' ? 'Scheduled' : 'Running'}
+                              color={colors[invoice.status]}
+
+                              //color={invoice.status=="running"?"success":{invoice.status=="scheduled"?"secondary":"warning"}}
+                            >
+                              {/* <Dropdown.Item onClick={()=>{updateRaceStatus(invoice.id, "running")}} >
                       running
                     </Dropdown.Item>
                     <Dropdown.Item onClick={()=>{updateRaceStatus(invoice.id, "scheduled")}}>
                      scheduled
                     </Dropdown.Item> */}
-                    <Dropdown.Item onClick={()=>{updateRaceStatus(invoice.id, "finished")}}>
-                      Finished
-                    </Dropdown.Item>
-
-                  </Dropdown>
-
-                  )}
-                  
-                </Table.Cell>
-                <Table.Cell className="text-center">
-                  <div className="flex justify-center gap-3">
-                    {/* <Tooltip content="Edit Invoice" placement="bottom">
+                              <Dropdown.Item
+                                onClick={() => {
+                                  updateRaceStatus(invoice.id, 'finished');
+                                }}
+                              >
+                                Finished
+                              </Dropdown.Item>
+                            </Dropdown>
+                          )}
+                        </Table.Cell>
+                        <Table.Cell className="text-center">
+                          <div className="flex justify-center gap-3">
+                            {/* <Tooltip content="Edit Invoice" placement="bottom">
                       <Button className="btn-circle p-0 mb-2 bg-lightsuccess  text-success hover:bg-success hover:text-white">
                         <Link to={`/apps/invoice/edit/${invoice.name}`}>
                           <Icon icon="solar:pen-outline" height={18} />
                         </Link>
                       </Button>
                     </Tooltip> */}
-                    {/* <Tooltip content="View Invoice" placement="bottom">
+                            {/* <Tooltip content="View Invoice" placement="bottom">
                       <Button color={"lightprimary"} className="btn-circle p-0 mb-2">
                         <Link to={`/apps/invoice/detail/${invoice.name}`}>
                           <Icon icon="solar:eye-outline" height={18} />
                         </Link>
                       </Button>
                     </Tooltip> */}
-                    <Tooltip content="Delete Race" placement="bottom">
-                      <Button
-                        color={"lighterror"}
-                        className="btn-circle p-0 mb-2"
-                        onClick={() => {
-                          setSelectedProducts([invoice.id]);
-                          handleDelete(invoice);
-                        }}
-                      >
-                        <Icon icon="solar:trash-bin-minimalistic-outline" height={18} />
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-              
-            ))}
-          </Table.Body>
-        </Table>
-      </div>
-      </div>
-      <div className="flex justify-between mt-4">
-        <Button
-          disabled={page === 1}
-          onClick={prevPage}
-        >
-          Previous
-        </Button>
-        <Button
-          disabled={!hasNextPage}
-          onClick={nextPage}
-        >
-          Next
-        </Button>
-      </div>
-      <Modal show={openDeleteDialog} onClose={handleCloseDeleteDialog} size={"md"}>
-        <Modal.Body>
-          <p className="text-center text-lg text-ld">
-            Are you sure you want to delete the selected race?
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="mx-auto">
-          <Button color="lightsecondary" onClick={handleCloseDeleteDialog}>
-            Cancel
-          </Button>
-          <Button color="lighterror" onClick={handleConfirmDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                            <Tooltip content="Delete Race" placement="bottom">
+                              <Button
+                                color={'lighterror'}
+                                className="btn-circle p-0 mb-2"
+                                onClick={() => {
+                                  setSelectedProducts([invoice.id]);
+                                  handleDelete(invoice);
+                                }}
+                              >
+                                <Icon icon="solar:trash-bin-minimalistic-outline" height={18} />
+                              </Button>
+                            </Tooltip>
+                          </div>
+                        </Table.Cell>
+                      </Table.Row>
+                    ),
+                  )}
+                </Table.Body>
+              </Table>
+            </div>
+          </div>
+          <div className="flex justify-between mt-4">
+            <Button disabled={page === 1} onClick={prevPage}>
+              Previous
+            </Button>
+            <Button disabled={!hasNextPage} onClick={nextPage}>
+              Next
+            </Button>
+          </div>
+          <Modal show={openDeleteDialog} onClose={handleCloseDeleteDialog} size={'md'}>
+            <Modal.Body>
+              <p className="text-center text-lg text-ld">
+                Are you sure you want to delete the selected race?
+              </p>
+            </Modal.Body>
+            <Modal.Footer className="mx-auto">
+              <Button color="lightsecondary" onClick={handleCloseDeleteDialog}>
+                Cancel
+              </Button>
+              <Button color="lighterror" onClick={handleConfirmDelete}>
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
-      <Modal show={showModal} size={"md"}>
-        <Modal.Body>
-          <p className="text-center text-lg text-ld">
-          Are you sure you want to create 30 demo races? <br/>
-          Each race will include 5 random users and 5 random stocks, running for 1 hour each, starting sequentially.
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="mx-auto">
-          <Button color="lighterror" onClick={()=>{setShowModal(false)}}>
-            Cancel
-          </Button>
-          <Button color="lightsecondary" onClick={()=>{
-            demoRaceCreation()
-            }}>
-            Proceed
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      </>)}
-      
-      
-    </div >
+          <Modal show={showModal} size={'md'}>
+            <Modal.Body>
+              <p className="text-center text-lg text-ld">
+                Are you sure you want to create 30 demo races? <br />
+                Each race will include 5 random users and 5 random stocks, running for 1 hour each,
+                starting sequentially.
+              </p>
+            </Modal.Body>
+            <Modal.Footer className="mx-auto">
+              <Button
+                color="lighterror"
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="lightsecondary"
+                onClick={() => {
+                  demoRaceCreation();
+                }}
+              >
+                Proceed
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+      )}
+    </div>
     // <div></div>
   );
 }
 
 export default InvoiceList;
-
-
