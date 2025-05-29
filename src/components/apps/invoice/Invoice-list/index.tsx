@@ -19,6 +19,7 @@ import { FINRACES_URL } from 'src/config.ts';
 
 import { Link, useNavigate } from 'react-router';
 import { InvoiceContext } from 'src/context/InvoiceContext';
+import { AuthContext } from 'src/context/AuthContext';
 
 function InvoiceList() {
   const { deleteInvoice } = useContext(InvoiceContext);
@@ -37,7 +38,8 @@ function InvoiceList() {
   const [upcomingRaces, setUpcomingRaces] = useState(0); // State to store total races
   const [selectedRace, setSelectedRace] = useState<any>({});
   const [change, setChange] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+
+  const { showModal, setShowModal } = useContext(AuthContext);
 
   useEffect(() => {
     getTotalRacesCount(
@@ -454,10 +456,8 @@ function InvoiceList() {
                 onChange={handleChange}
               />
             </div>
-            <div className="sm:flex justify-between gap-5">
-              {/* <Button color={"error"} className="sm:w-fit w-full sm:mt-0 mt-4 mr-2">
-         Delete Race
-        </Button> */}
+            {/* <div className="sm:flex justify-between gap-5">
+             
               <Button
                 onClick={() => {
                   setShowModal(true);
@@ -470,7 +470,7 @@ function InvoiceList() {
               <Button color={'primary'} className="sm:w-fit w-full sm:mt-0 mt-4">
                 <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
               </Button>
-            </div>
+            </div> */}
             {/* <Button color={"primary"} className="sm:w-fit w-full sm:mt-0 mt-4">
           <Link to="/raceManagement/createBotRace">Create Bot Race</Link>
         </Button> */}
