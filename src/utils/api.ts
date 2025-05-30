@@ -271,7 +271,7 @@ export const getRaceList = async (
 ) => {
   let token = localStorage.getItem('token');
   try {
-    let URL = `${API_URL}/races/detailed?limit=30&`;
+    let URL = `${API_URL}/races?limit=30&`;
     if (status) {
       URL += `statuses=${status}&`;
     }
