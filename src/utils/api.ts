@@ -1023,3 +1023,39 @@ export const getLeaderboard = async (onSuccess: any, onError: any, page?: any) =
     onError(error); // Call error handler with the error message
   }
 };
+
+//search stocks for demo race
+export const debounceStockSearchj = async (prefix: any, onSuccess: any, onError: any) => {
+  try {
+    let token = localStorage.getItem('token');
+
+    if (!token) {
+      onError('Token is missing or invalid.');
+      return;
+    }
+    const url = `${API_URL}/stocks?filters=${encodeURIComponent(
+      JSON.stringify({
+        searchTerm: prefix,
+      }),
+    )}`;
+
+    // Make the PATCH request
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Parse and return the response data
+    const data = await response.json();
+    console.log('Searched Stock with prefix', data.data);
+    onSuccess(data.data);
+    return data;
+  } catch (error: any) {
+    // Handle errors
+    console.error('Something went wrong:', error.message);
+    onError(error);
+  }
+};

@@ -19,12 +19,9 @@ export interface MenuItem {
   url?: any;
 }
 
-import { uniqueId } from "lodash";
-
+import { uniqueId } from 'lodash';
 
 const SidebarContent: MenuItem[] = [
-  
-
   {
     id: 1,
     // name: "Dashboard",
@@ -100,166 +97,166 @@ const SidebarContent: MenuItem[] = [
         // heading: "Apps",
         children: [
           {
-            name: "Home",
-            icon: "solar:screencast-2-line-duotone",
+            name: 'Home',
+            icon: 'solar:screencast-2-line-duotone',
             id: uniqueId(),
             // url: "/dashboards/dashboard3",
-            url:"/"
+            url: '/',
           },
           // {
           {
             id: uniqueId(),
-            name: "User Management",
+            name: 'User Management',
             // icon: "solar:phone-line-duotone",
-            icon:"solar:shield-user-outline",
-            url: "/userManagement",
-          // },
-          // {
-          //   name: "Ecommerce",
-          //   id: uniqueId(),
-          //   icon: "solar:cart-3-line-duotone",
-          //   children: [
-          //     {
-          //       id: uniqueId(),
-          //       name: "Shop",
-          //       url: "/apps/ecommerce/shop",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Details",
-          //       url: "/apps/ecommerce/detail/3",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "List",
-          //       url: "/apps/ecommerce/list",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Checkout",
-          //       url: "/apps/ecommerce/checkout",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Add Product",
-          //       url: "/apps/ecommerce/addproduct",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Edit Product",
-          //       url: "/apps/ecommerce/editproduct",
-          //     },
-          //   ],
-          // },
-          // {
-          //   name: "Blogs",
-          //   id: uniqueId(),
-          //   icon: "solar:widget-add-line-duotone",
-          //   children: [
-          //     {
-          //       id: uniqueId(),
-          //       name: "Blog Post",
-          //       url: "/apps/blog/post",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Blog Detail",
-          //       url: "/apps/blog/detail/streaming-video-way-before-it-was-cool-go-dark-tomorrow",
-          //     },
-          //   ],
-          // },
-          // {
-          //   id: uniqueId(),
-          //   name: "Chats",
-          //   icon: "solar:chat-round-line-line-duotone",
-          //   url: "/apps/chats",
-          // },
-          // {
-          //   name: "User Profile",
-          //   id: uniqueId(),
-          //   icon: "solar:shield-user-outline",
-          //   children: [
-          //     {
-          //       id: uniqueId(),
-          //       name: "Profile",
-          //       url: "/apps/user-profile/profile",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Followers",
-          //       url: "/apps/user-profile/followers",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Friends",
-          //       url: "/apps/user-profile/friends",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Gallery",
-          //       url: "/apps/user-profile/gallery",
-          //     },
-          //   ],
-          // },
+            icon: 'solar:shield-user-outline',
+            url: '/userManagement',
+            // },
+            // {
+            //   name: "Ecommerce",
+            //   id: uniqueId(),
+            //   icon: "solar:cart-3-line-duotone",
+            //   children: [
+            //     {
+            //       id: uniqueId(),
+            //       name: "Shop",
+            //       url: "/apps/ecommerce/shop",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Details",
+            //       url: "/apps/ecommerce/detail/3",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "List",
+            //       url: "/apps/ecommerce/list",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Checkout",
+            //       url: "/apps/ecommerce/checkout",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Add Product",
+            //       url: "/apps/ecommerce/addproduct",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Edit Product",
+            //       url: "/apps/ecommerce/editproduct",
+            //     },
+            //   ],
+            // },
+            // {
+            //   name: "Blogs",
+            //   id: uniqueId(),
+            //   icon: "solar:widget-add-line-duotone",
+            //   children: [
+            //     {
+            //       id: uniqueId(),
+            //       name: "Blog Post",
+            //       url: "/apps/blog/post",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Blog Detail",
+            //       url: "/apps/blog/detail/streaming-video-way-before-it-was-cool-go-dark-tomorrow",
+            //     },
+            //   ],
+            // },
+            // {
+            //   id: uniqueId(),
+            //   name: "Chats",
+            //   icon: "solar:chat-round-line-line-duotone",
+            //   url: "/apps/chats",
+            // },
+            // {
+            //   name: "User Profile",
+            //   id: uniqueId(),
+            //   icon: "solar:shield-user-outline",
+            //   children: [
+            //     {
+            //       id: uniqueId(),
+            //       name: "Profile",
+            //       url: "/apps/user-profile/profile",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Followers",
+            //       url: "/apps/user-profile/followers",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Friends",
+            //       url: "/apps/user-profile/friends",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Gallery",
+            //       url: "/apps/user-profile/gallery",
+            //     },
+            //   ],
+            // },
 
-          // {
-          //   name: "Invoice",
-          //   id: uniqueId(),
-          //   icon: "solar:bill-check-outline",
-          //   children: [
-          //     {
-          //       id: uniqueId(),
-          //       name: "List",
-          //       url: "/apps/invoice/list",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Details",
-          //       url: "/apps/invoice/detail/PineappleInc",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Create",
-          //       url: "/apps/invoice/create",
-          //     },
-          //     {
-          //       id: uniqueId(),
-          //       name: "Edit",
-          //       url: "/apps/invoice/edit/PineappleInc",
-          //     },
-          //   ],
-          // },
+            // {
+            //   name: "Invoice",
+            //   id: uniqueId(),
+            //   icon: "solar:bill-check-outline",
+            //   children: [
+            //     {
+            //       id: uniqueId(),
+            //       name: "List",
+            //       url: "/apps/invoice/list",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Details",
+            //       url: "/apps/invoice/detail/PineappleInc",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Create",
+            //       url: "/apps/invoice/create",
+            //     },
+            //     {
+            //       id: uniqueId(),
+            //       name: "Edit",
+            //       url: "/apps/invoice/edit/PineappleInc",
+            //     },
+            //   ],
+            // },
 
-          // {
-          //   id: uniqueId(),
-          //   name: "Notes",
-          //   icon: "solar:document-text-outline",
-          //   url: "/apps/notes",
-          // },
-          // {
-          //   id: uniqueId(),
-          //   name: "Calendar",
-          //   icon: "solar:calendar-mark-line-duotone",
-          //   url: "/apps/calendar",
-          // },
-          // {
-          //   id: uniqueId(),
-          //   name: "Email",
-          //   icon: "solar:letter-linear",
-          //   url: "/apps/email",
-          // },
+            // {
+            //   id: uniqueId(),
+            //   name: "Notes",
+            //   icon: "solar:document-text-outline",
+            //   url: "/apps/notes",
+            // },
+            // {
+            //   id: uniqueId(),
+            //   name: "Calendar",
+            //   icon: "solar:calendar-mark-line-duotone",
+            //   url: "/apps/calendar",
+            // },
+            // {
+            //   id: uniqueId(),
+            //   name: "Email",
+            //   icon: "solar:letter-linear",
+            //   url: "/apps/email",
+            // },
           },
           {
-                  id: uniqueId(),
-                  name: "Race Management",
-                  icon:"ph:flag-checkered-fill",
-                  url: "/raceManagement",
-                },
+            id: uniqueId(),
+            name: 'Race Management',
+            icon: 'ph:flag-checkered-fill',
+            url: '/raceManagement',
+          },
           {
             id: uniqueId(),
-            name: "Tickets",
-            icon: "solar:ticker-star-outline",
-            url: "/tickets",
+            name: 'Tickets',
+            icon: 'solar:ticker-star-outline',
+            url: '/tickets',
           },
           // {
           //   id: uniqueId(),
@@ -268,11 +265,18 @@ const SidebarContent: MenuItem[] = [
           //   url: "/apps/kanban",
           // },
           {
-            name: "LeaderBoard",
+            name: 'LeaderBoard',
             //icon: "solar:tablet-line-duotone",
-            icon:"material-symbols:leaderboard-outline",
+            icon: 'material-symbols:leaderboard-outline',
             id: uniqueId(),
-            url: "/leaderboard",
+            url: '/leaderboard',
+          },
+          {
+            name: 'Demo Race Management',
+            icon: 'solar:document-add-outline',
+            id: uniqueId(),
+            // url: "/dashboards/dashboard3",
+            url: '/demoRaceManagement',
           },
         ],
       },
@@ -555,7 +559,7 @@ const SidebarContent: MenuItem[] = [
   //       ],
   //     },
   //   ],
-  // }, 
+  // },
   // {
   //   id: 4,
   //   name: "Tables",

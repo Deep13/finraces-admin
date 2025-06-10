@@ -3,45 +3,46 @@ interface MiniiconsType {
   id: number;
   icon: string;
   tooltip: string;
-  url:string;
+  url: string;
 }
 
 const Miniicons: MiniiconsType[] = [
   {
     id: 1,
-    icon: "solar:screencast-2-line-duotone",
-    tooltip: "Home",
-    url: "/",
+    icon: 'solar:screencast-2-line-duotone',
+    tooltip: 'Home',
+    url: '/',
   },
   {
     id: 2,
-    icon: "solar:shield-user-outline",
-    tooltip: "User Management",
-    url: "/userManagement",
+    icon: 'solar:shield-user-outline',
+    tooltip: 'User Management',
+    url: '/userManagement',
   },
   {
     id: 3,
-    icon: "ph:flag-checkered-fill",
-    tooltip: "Race Management",
-    url: "/raceManagement",
+    icon: 'ph:flag-checkered-fill',
+    tooltip: 'Race Management',
+    url: '/raceManagement',
   },
   {
     id: 4,
-    icon: "solar:ticker-star-outline",
-    tooltip: "Tickets",
-    url:  "/tickets",
+    icon: 'solar:ticker-star-outline',
+    tooltip: 'Tickets',
+    url: '/tickets',
   },
   {
     id: 5,
-    icon: "material-symbols:leaderboard-outline",
-    tooltip: "Leaderboard",
-    url: "/leaderboard"
+    icon: 'material-symbols:leaderboard-outline',
+    tooltip: 'Leaderboard',
+    url: '/leaderboard',
   },
-  // {
-  //   id: 5,
-  //   icon: "solar:chart-line-duotone",
-  //   tooltip: "Charts",
-  // },
+  {
+    id: 6,
+    icon: 'solar:document-add-outline',
+    tooltip: 'Demo Race Management',
+    url: '/demoRaceManagement',
+  },
   // {
   //   id: 6,
   //   icon: "solar:widget-6-line-duotone",

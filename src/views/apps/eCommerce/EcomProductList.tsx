@@ -5,23 +5,22 @@ import { ProductProvider } from '../../../context/Ecommercecontext';
 import BreadcrumbComp from '../../../layouts/full/shared/breadcrumb/BreadcrumbComp';
 import ProductTableList from '../../../components/apps/ecommerce/productTableList/ProductTableList';
 
-
 const BCrumb = [
   {
     to: '/',
     title: 'Home',
   },
   {
-    title: 'Product list',
+    title: 'Demo Race Management',
   },
 ];
 
 const EcomProductList = () => {
   return (
-    <ProductProvider>
-    <BreadcrumbComp title="Product list" items={BCrumb} />
-    <ProductTableList />
-  </ProductProvider>
+    <>
+      <BreadcrumbComp title="Demo Race Management" items={BCrumb} />
+      <ProductTableList />
+    </>
   );
 };
 

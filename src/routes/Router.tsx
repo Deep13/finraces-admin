@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import  { lazy } from 'react';
+import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import FrontendLayout from 'src/layouts/blank/FrontendLayout';
@@ -71,12 +71,18 @@ const FlowbiteAlert = Loadable(lazy(() => import('../views/ui-components/Flowbit
 const FlowbiteAvatar = Loadable(lazy(() => import('../views/ui-components/FlowbiteAvatar')));
 const FlowbiteBadge = Loadable(lazy(() => import('../views/ui-components/FlowbiteBadge')));
 const FlowbiteBanner = Loadable(lazy(() => import('../views/ui-components/FlowbiteBanner')));
-const FlowbiteBreadcrumb = Loadable(lazy(() => import('../views/ui-components/FlowbiteBreadcrumb')));
-const FlowbiteButtonGroup = Loadable(lazy(() => import('../views/ui-components/FlowbiteButtonGroup')));
+const FlowbiteBreadcrumb = Loadable(
+  lazy(() => import('../views/ui-components/FlowbiteBreadcrumb')),
+);
+const FlowbiteButtonGroup = Loadable(
+  lazy(() => import('../views/ui-components/FlowbiteButtonGroup')),
+);
 const FlowbiteButtons = Loadable(lazy(() => import('../views/ui-components/FlowbiteButtons')));
 const FlowbiteCard = Loadable(lazy(() => import('../views/ui-components/FlowbiteCard')));
 const FlowbiteCarousel = Loadable(lazy(() => import('../views/ui-components/FlowbiteCarousel')));
-const FlowbiteDatePicker = Loadable(lazy(() => import('../views/ui-components/FlowbiteDatePicker')));
+const FlowbiteDatePicker = Loadable(
+  lazy(() => import('../views/ui-components/FlowbiteDatePicker')),
+);
 const FlowbiteDrawer = Loadable(lazy(() => import('../views/ui-components/FlowbiteDrawer')));
 const FlowbiteDropdown = Loadable(lazy(() => import('../views/ui-components/FlowbiteDropdown')));
 const FlowbiteFooter = Loadable(lazy(() => import('../views/ui-components/FlowbiteFooter')));
@@ -85,9 +91,13 @@ const FlowbiteListgroup = Loadable(lazy(() => import('../views/ui-components/Flo
 const FlowbiteMegamenu = Loadable(lazy(() => import('../views/ui-components/FlowbiteMegamenu')));
 const FlowbiteModals = Loadable(lazy(() => import('../views/ui-components/FlowbiteModals')));
 const FlowbiteNavbar = Loadable(lazy(() => import('../views/ui-components/FlowbiteNavbar')));
-const FlowbitePagination = Loadable(lazy(() => import('../views/ui-components/FlowbitePagination')));
+const FlowbitePagination = Loadable(
+  lazy(() => import('../views/ui-components/FlowbitePagination')),
+);
 const FlowbitePopover = Loadable(lazy(() => import('../views/ui-components/FlowbitePopover')));
-const FlowbiteProgressbar = Loadable(lazy(() => import('../views/ui-components/FlowbiteProgressbar')));
+const FlowbiteProgressbar = Loadable(
+  lazy(() => import('../views/ui-components/FlowbiteProgressbar')),
+);
 const FlowbiteRating = Loadable(lazy(() => import('../views/ui-components/FlowbiteRating')));
 const FlowbiteSidebar = Loadable(lazy(() => import('../views/ui-components/FlowbiteSidebar')));
 const FlowbiteSpinner = Loadable(lazy(() => import('../views/ui-components/FlowbiteSpinner')));
@@ -96,7 +106,9 @@ const FlowbiteTables = Loadable(lazy(() => import('../views/ui-components/Flowbi
 const FlowbiteTimeline = Loadable(lazy(() => import('../views/ui-components/FlowbiteTimeline')));
 const FlowbiteToast = Loadable(lazy(() => import('../views/ui-components/FlowbiteToast')));
 const FlowbiteTooltip = Loadable(lazy(() => import('../views/ui-components/FlowbiteTooltip')));
-const FlowbiteTypography = Loadable(lazy(() => import('../views/ui-components/FlowbiteTypography')));
+const FlowbiteTypography = Loadable(
+  lazy(() => import('../views/ui-components/FlowbiteTypography')),
+);
 
 // tables
 const BasicTable = Loadable(lazy(() => import('../views/tables/BasicTable')));
@@ -136,7 +148,9 @@ const HeadlessComboBox = Loadable(lazy(() => import('../views/headless-form/Head
 const HeadlessFieldset = Loadable(lazy(() => import('../views/headless-form/HeadlessFieldset')));
 const HeadlessInput = Loadable(lazy(() => import('../views/headless-form/HeadlessInput')));
 const HeadlessListbox = Loadable(lazy(() => import('../views/headless-form/HeadlessListbox')));
-const HeadlessRadioGroup = Loadable(lazy(() => import('../views/headless-form/HeadlessRadioGroup')));
+const HeadlessRadioGroup = Loadable(
+  lazy(() => import('../views/headless-form/HeadlessRadioGroup')),
+);
 const HeadlessSelect = Loadable(lazy(() => import('../views/headless-form/HeadlessSelect')));
 const HeadlessSwitch = Loadable(lazy(() => import('../views/headless-form/HeadlessSwitch')));
 const HeadlessTextarea = Loadable(lazy(() => import('../views/headless-form/HeadlessTextarea')));
@@ -155,8 +169,6 @@ const TwoSteps2 = Loadable(lazy(() => import('../views/authentication/auth2/TwoS
 // const ErrorPage = Loadable(lazy(() => import('../views/authentication/Error')));
 const Maintainance = Loadable(lazy(() => import('../views/authentication/Maintainance')));
 
-
-
 // landingpage
 const Landingpage = Loadable(lazy(() => import('../views/pages/landingpages/LandingPages')));
 
@@ -171,10 +183,6 @@ const BlogPost = Loadable(lazy(() => import('../views/pages/frontend-pages/BlogP
 
 const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')));
 const Error = Loadable(lazy(() => import('../views/authentication/Error')));
-
-
-
-
 
 //react tables
 const ReactBasicTable = Loadable(lazy(() => import('../views/react-tables/basic/page')));
@@ -200,20 +208,23 @@ const Router = [
     element: <FullLayout />,
     children: [
       // { path: '/', exact: true, element: <Dashboard1 /> },
-      { path: '/', exact: true, element: <ProtectedRoute element={<Dashboard3 />}/> },
-      {path:'/userManagement',exact:true, element: <ProtectedRoute element={<Contact />} />},
-      { path: '/raceManagement', element: <ProtectedRoute element={<InvoiceList />}/> },
-      { path: '/tickets', element: <ProtectedRoute element={<Tickets />}/> },
-      { path: '/leaderboard', element: <ProtectedRoute element ={<StrippedTable />}/> },
-      { path: '/raceManagement/createBotRace', element: <ProtectedRoute element ={<InvoiceCreate />}/>  },
-      { path: '/tickets/create', element:<ProtectedRoute element ={ <CreateTickets />}/> },
-      { path: '/tickets/details/:id', element: <ProtectedRoute element ={ <BlogDetail />}/> },
+      { path: '/', exact: true, element: <ProtectedRoute element={<Dashboard3 />} /> },
+      { path: '/userManagement', exact: true, element: <ProtectedRoute element={<Contact />} /> },
+      { path: '/raceManagement', element: <ProtectedRoute element={<InvoiceList />} /> },
+      { path: '/tickets', element: <ProtectedRoute element={<Tickets />} /> },
+      { path: '/leaderboard', element: <ProtectedRoute element={<StrippedTable />} /> },
+      {
+        path: '/raceManagement/createBotRace',
+        element: <ProtectedRoute element={<InvoiceCreate />} />,
+      },
+      { path: '/tickets/create', element: <ProtectedRoute element={<CreateTickets />} /> },
+      { path: '/tickets/details/:id', element: <ProtectedRoute element={<BlogDetail />} /> },
       // { path: '/dashboards/dashboard2', exact: true, element: <Dashboard2 /> },
       // { path: '/dashboards/dashboard3', exact: true, element: <Dashboard3 /> },
       // Apps
       //{ path: '/apps/contacts', element: <Contact /> },
       //{ path: '/apps/ecommerce/shop', element: <Ecommerce /> },
-      //{ path: '/apps/ecommerce/list', element: <EcomProductList /> },
+      { path: '/demoRaceManagement', element: <EcomProductList /> },
       // { path: '/apps/ecommerce/checkout', element: <EcomProductCheckout /> },
       // { path: '/apps/ecommerce/addproduct', element: <EcommerceAddProduct /> },
       // { path: '/apps/ecommerce/editproduct', element: <EcommerceEditProduct /> },
@@ -238,7 +249,7 @@ const Router = [
       // { path: '/theme-pages/casl', element: <RollbaseCASL /> },
       // { path: '/theme-pages/pricing', element: <Pricing /> },
       // { path: '/theme-pages/faq', element: <Faq /> },
-      // { path: '/theme-pages/account-settings', element: <AccountSetting /> }, 
+      // { path: '/theme-pages/account-settings', element: <AccountSetting /> },
       // { path: '/widgets/cards', element: <WidgetCards /> },
       // { path: '/widgets/banners', element: <WidgetBanners /> },
       // { path: '/widgets/charts', element: <WidgetCharts /> },
@@ -321,9 +332,6 @@ const Router = [
       // { path: '/headless-form/switch', element: <HeadlessSwitch /> },
       // { path: '/headless-form/textarea', element: <HeadlessTextarea /> },
 
-
-
-
       // { path: '/sample-page', exact: true, element: <SamplePage /> },
       // { path: '*', element: <Navigate to="/auth/404" /> },
     ],
@@ -345,7 +353,7 @@ const Router = [
       //     { path: 'blog/detail/:id', element: <BlogPost /> },
       //   ]
       // },
-      { path: '/login', element: <LoginRoute element={<Login2 />}/> },
+      { path: '/login', element: <LoginRoute element={<Login2 />} /> },
       // { path: '/auth/auth1/login', element: <Login /> },
       // { path: '/auth/auth2/login', element: <Login2 /> },
       // { path: '/auth/auth1/register', element: <Register /> },
@@ -360,8 +368,7 @@ const Router = [
       { path: '/auth/404', element: <Error /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
-  }
-  ,
+  },
 ];
 
 const router = createBrowserRouter(Router);
