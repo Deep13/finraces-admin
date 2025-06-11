@@ -1059,3 +1059,60 @@ export const debounceStockSearchj = async (prefix: any, onSuccess: any, onError:
     onError(error);
   }
 };
+
+//get demo race data
+export const getDemoRaceData = async (onSuccess: any, onError: any) => {
+  try {
+    let token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token missing. Unauthorized access.');
+    }
+
+    const response = await fetch(`${API_URL}/demo-race-configs`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    onSuccess(data);
+  } catch (error: any) {
+    onError(error);
+  }
+};
+
+//save demo race data
+export const postDemoRaceData = async (
+  payload: { duration_minutes: number; stocks: any[] },
+  onSuccess: any,
+  onError: any,
+) => {
+  try {
+    let token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token not found. Unauthorized access.');
+    }
+
+    let response = await fetch(`${API_URL}/demo-race-configs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error while saving data: ${response.status}`);
+    }
+    let data = await response.json();
+    onSuccess(data);
+  } catch (error: any) {
+    onError(error);
+  }
+};
