@@ -323,17 +323,23 @@ function InvoiceList() {
     // Generate the race name
     return `${userName}'s ${randomPhrase} ${today}`;
   };
+
+  const [progress, setProgress] = useState<number>(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const demoRaceCreation = async () => {
+    setIsGenerating(true);
+    setProgress(0);
+
+    const total = 30;
     const now = new Date();
-    now.setUTCMinutes(now.getUTCMinutes() + 5); // Give a buffer to avoid past errors
+    now.setUTCMinutes(now.getUTCMinutes() + 5);
 
-    let races = [];
+    for (let i = 0; i < total; i++) {
+      const startTime = new Date(now.getTime() + i * 20 * 60 * 1000);
+      const endTime = new Date(startTime.getTime() + 30 * 60 * 1000);
 
-    for (let i = 0; i < 30; i++) {
-      const startTime = new Date(now.getTime() + i * (62 * 60 * 1000)); // 1h2m apart
-      const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // +1 hour
-
-      const startISOString = startTime.toISOString(); // full UTC ISO string
+      const startISOString = startTime.toISOString();
       const endISOString = endTime.toISOString();
 
       const raceData = {
@@ -341,34 +347,25 @@ function InvoiceList() {
         raceName: generateRandomStockRaceName(),
         numUsers: 5,
         numStocks: 5,
-        startDate: startISOString.split('T')[0], // 'YYYY-MM-DD'
-        startTime: startISOString.split('T')[1].split('.')[0] + 'Z', // force UTC
+        startDate: startISOString.split('T')[0],
+        startTime: startISOString.split('T')[1].split('.')[0] + 'Z',
         endDate: endISOString.split('T')[0],
-        endTime: endISOString.split('T')[1].split('.')[0] + 'Z', // force UTC
+        endTime: endISOString.split('T')[1].split('.')[0] + 'Z',
       };
 
-      races.push(raceData);
+      try {
+        await new Promise((resolve, reject) => {
+          createDummyRace(resolve, reject, raceData);
+        });
+      } catch (err) {
+        console.error(`❌ Race ${i + 1} Failed`, err);
+      }
+
+      // update progress
+      setProgress(Math.round(((i + 1) / total) * 100));
     }
 
-    console.log('Generated Races:', races);
-
-    const results = await Promise.allSettled(
-      races.map(
-        (race) =>
-          new Promise((resolve, reject) => {
-            createDummyRace(resolve, reject, race);
-          }),
-      ),
-    );
-
-    results.forEach((result, idx) => {
-      if (result.status === 'fulfilled') {
-        console.log(`✅ Race ${idx + 1} Created:`, result.value);
-      } else {
-        console.error(`❌ Race ${idx + 1} Failed:`, result.reason);
-      }
-    });
-
+    setIsGenerating(false);
     setChange((prev) => !prev);
     setShowModal(false);
   };
@@ -639,6 +636,30 @@ function InvoiceList() {
                 Each race will include 5 random users and 5 random stocks, running for 1 hour each,
                 starting sequentially.
               </p>
+            </Modal.Body>
+            <Modal.Footer className="mx-auto">
+              <Button
+                color="lighterror"
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="lightsecondary"
+                onClick={() => {
+                  demoRaceCreation();
+                }}
+              >
+                Proceed
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal show={isGenerating} size={'md'}>
+            <Modal.Body>
+              <p className="text-center text-lg text-ld">Generating Races... {progress}%</p>
             </Modal.Body>
             <Modal.Footer className="mx-auto">
               <Button
