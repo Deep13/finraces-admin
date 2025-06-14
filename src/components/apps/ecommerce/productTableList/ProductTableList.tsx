@@ -279,7 +279,7 @@ const ProductTablelist = () => {
                 </Table.HeadCell>
                 <Table.HeadCell className="text-base font-semibold py-3">Stock</Table.HeadCell>
                 <Table.HeadCell className="text-base font-semibold py-3">Ticker</Table.HeadCell>
-                {/* <Table.HeadCell className="text-base font-semibold py-3">Price</Table.HeadCell> */}
+                <Table.HeadCell className="text-base font-semibold py-3">Price</Table.HeadCell>
                 <Table.HeadCell className="text-base font-semibold py-3">Action</Table.HeadCell>
               </Table.Head>
 
@@ -315,11 +315,11 @@ const ProductTablelist = () => {
                         {item?.ticker}
                       </p>
                     </Table.Cell>
-                    {/* <Table.Cell className="whitespace-nowrap">
+                    <Table.Cell className="whitespace-nowrap">
                       <div className="flex gap-2 text-sm items-center text-darklink dark:text-bodytext font-medium">
                         {item?.price} $
                       </div>
-                    </Table.Cell> */}
+                    </Table.Cell>
 
                     <Table.Cell className="whitespace-nowrap">
                       <Button color={'lighterror'} className="btn-circle p-0 text-center">

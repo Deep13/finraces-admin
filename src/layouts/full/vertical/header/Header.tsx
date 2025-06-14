@@ -1,19 +1,18 @@
-
-import  { useState, useEffect, useContext } from "react";
-import { Navbar } from "flowbite-react";
-import Search from "./Search";
-import { Icon } from "@iconify/react";
-import AppLinks from "./AppLinks";
-import Notifications from "./Notifications";
-import Profile from "./Profile";
-import FullLogo from "../../shared/logo/FullLogo";
-import MobileHeaderItems from "./MobileHeaderItems";
-import { Drawer } from "flowbite-react";
-import MobileSidebar from "../sidebar/MobileSidebar";
-import HorizontalMenu from "../../horizontal/header/HorizontalMenu";
-import { CustomizerContext } from "../../../../context/CustomizerContext";
+import { useState, useEffect, useContext } from 'react';
+import { Navbar } from 'flowbite-react';
+import Search from './Search';
+import { Icon } from '@iconify/react';
+import AppLinks from './AppLinks';
+import Notifications from './Notifications';
+import Profile from './Profile';
+import FullLogo from '../../shared/logo/FullLogo';
+import MobileHeaderItems from './MobileHeaderItems';
+import { Drawer } from 'flowbite-react';
+import MobileSidebar from '../sidebar/MobileSidebar';
+import HorizontalMenu from '../../horizontal/header/HorizontalMenu';
+import { CustomizerContext } from '../../../../context/CustomizerContext';
 // import { Language } from "./Language";
-import { DashboardContext } from "src/context/DashboardContext/DashboardContext";
+import { DashboardContext } from 'src/context/DashboardContext/DashboardContext';
 
 interface HeaderPropsType {
   layoutType: string;
@@ -31,32 +30,29 @@ const Header = ({ layoutType }: HeaderPropsType) => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  const {  isLayout, activeMode, setActiveMode } =
-    useContext(CustomizerContext);
+  const { isLayout, activeMode, setActiveMode } = useContext(CustomizerContext);
 
-    const {isMobileSidebarOpen,setIsMobileSidebarOpen} = useContext(DashboardContext);
+  const { isMobileSidebarOpen, setIsMobileSidebarOpen } = useContext(DashboardContext);
 
-  const [mobileMenu, setMobileMenu] = useState("");
+  const [mobileMenu, setMobileMenu] = useState('');
 
   const handleMobileMenu = () => {
-    if (mobileMenu === "active") {
-      setMobileMenu("");
+    if (mobileMenu === 'active') {
+      setMobileMenu('');
     } else {
-      setMobileMenu("active");
+      setMobileMenu('active');
     }
   };
 
   const toggleMode = () => {
-    setActiveMode((prevMode: string) =>
-      prevMode === "light" ? "dark" : "light"
-    );
+    setActiveMode((prevMode: string) => (prevMode === 'light' ? 'dark' : 'light'));
   };
 
   // mobile-sidebar
@@ -65,16 +61,14 @@ const Header = ({ layoutType }: HeaderPropsType) => {
     <>
       <header
         className={`top-0 z-[5]  ${
-          isSticky
-            ? "bg-white dark:bg-darkgray sticky"
-            : "bg-transparent"
+          isSticky ? 'bg-white dark:bg-darkgray sticky' : 'bg-transparent'
         }`}
       >
         <Navbar
           fluid
           className={`rounded-none bg-transparent dark:bg-transparent py-4 sm:px-[15px] px-2 ${
-            layoutType == "horizontal" ? "container mx-auto !px-6" : ""
-          }  ${isLayout == "full" ? "!max-w-full " : ""}`}
+            layoutType == 'horizontal' ? 'container mx-auto !px-6' : ''
+          }  ${isLayout == 'full' ? '!max-w-full ' : ''}`}
         >
           {/* Mobile Toggle Icon */}
           <span
@@ -86,7 +80,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
           {/* Toggle Icon   */}
           <Navbar.Collapse className="xl:block ">
             <div className="flex gap-3 items-center relative">
-              {layoutType == "horizontal" ? (
+              {layoutType == 'horizontal' ? (
                 <div className="me-3">
                   <FullLogo />
                 </div>
@@ -111,7 +105,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
               {/* Theme Toggle */}
 
               {/* Light Mode Button */}
-              {activeMode === "light" ? (
+              {activeMode === 'light' ? (
                 <div
                   className="h-10 w-10 hover:text-primary hover:bg-lightprimary dark:hover:bg-darkminisidebar  dark:hover:text-primary focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-darklink  dark:text-white"
                   onClick={toggleMode}
@@ -133,7 +127,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
               )}
 
               {/* Notification Dropdown */}
-              <Notifications />
+              {/* <Notifications /> */}
 
               {/* Language Dropdown*/}
               {/* <Language /> */}
@@ -150,18 +144,14 @@ const Header = ({ layoutType }: HeaderPropsType) => {
             <Icon icon="tabler:dots" height={21} />
           </span>
         </Navbar>
-        <div
-          className={`w-full  xl:hidden block mobile-header-menu ${mobileMenu}`}
-        >
+        <div className={`w-full  xl:hidden block mobile-header-menu ${mobileMenu}`}>
           <MobileHeaderItems />
         </div>
 
         {/* Horizontal Menu  */}
-        {layoutType == "horizontal" ? (
+        {layoutType == 'horizontal' ? (
           <div className="xl:border-t xl:border-ld">
-            <div
-              className={`${isLayout == "full" ? "w-full px-6" : "container"}`}
-            >
+            <div className={`${isLayout == 'full' ? 'w-full px-6' : 'container'}`}>
               <HorizontalMenu />
             </div>
           </div>
